@@ -4,8 +4,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "eslint --ext .js,.vue src",
-    "lint-fix": "eslint --fix --ext .js --ext .vue src/ mock/"
+    "lint": "eslint --fix --ext .js,.vue src"
   },
   "dependencies": {
     "axios": "0.18.1",
