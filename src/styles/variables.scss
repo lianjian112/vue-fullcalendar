@@ -1,13 +1,22 @@
+/* 改变主题色变量 */
+$--color-primary: #002FA7;
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import "~element-ui/packages/theme-chalk/src/index";
 // sidebar
-$menuText:#bfcbd9;
-$menuActiveText:#409EFF;
-$subMenuActiveText:#f4f4f5; //https://github.com/ElemeFE/element/issues/12951
+$menuText:#8A94A6;
+$menuHoverText:#fff;
+$menuActiveText:#fff;
+$subMenuActiveText:$--color-primary; //https://github.com/ElemeFE/element/issues/12951
 
-$menuBg:#304156;
-$menuHover:#263445;
+$menuBg:#fff;
+$menuActiveBg:$--color-primary;
+$menuHover:#6682CA;
 
-$subMenuBg:#1f2d3d;
-$subMenuHover:#001528;
+$subMenuBg:#fff;
+$subMenuHover:#6682CA;
 
 $sideBarWidth: 210px;
 
@@ -22,4 +31,5 @@ $sideBarWidth: 210px;
   subMenuBg: $subMenuBg;
   subMenuHover: $subMenuHover;
   sideBarWidth: $sideBarWidth;
+  menuActiveBg:$menuActiveBg
 }

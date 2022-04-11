@@ -77,7 +77,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .line{
   text-align: center;
 }
