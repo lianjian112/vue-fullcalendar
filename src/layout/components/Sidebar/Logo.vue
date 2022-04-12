@@ -11,13 +11,14 @@
         <h1 v-else class="sidebar-title">{{ title }}</h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" src="@/assets/logo/logo.png" class="sidebar-logo" />
+        <img v-if="logo" :src="logo" class="sidebar-logo" />
       </router-link>
     </transition>
   </div>
 </template>
 
 <script>
+import imgUrl from "../../../assets/logo/logo.png";
 export default {
   name: "SidebarLogo",
   props: {
@@ -28,8 +29,8 @@ export default {
   },
   data() {
     return {
-      title: "Vue Admin Template",
-      logo: "@/assets/logo/logo.png",
+      title: "",
+      logo: imgUrl,
     };
   },
 };
@@ -48,8 +49,8 @@ export default {
 .sidebar-logo-container {
   position: relative;
   width: 100%;
-  height: 50px;
-  line-height: 50px;
+  height: 56px;
+  line-height: 56px;
   background: #fff;
   text-align: center;
   overflow: hidden;
