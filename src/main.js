@@ -4,7 +4,7 @@ import 'normalize.css/normalize.css' // CSS重置的替代方法
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-
+import '@/assets/styles/iconfont.css'
 import '@/styles/index.scss' // 全局 css
 
 import App from './App'

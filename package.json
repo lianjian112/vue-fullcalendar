@@ -4,7 +4,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "eslint --fix --ext .js,.vue src"
+    "lint": "eslint --fix --ext .js,.vue src",
+    "iconfont": "node ./scripts/iconfont"
   },
   "dependencies": {
     "axios": "0.18.1",
@@ -36,6 +37,9 @@
     "mockjs": "1.0.1-beta3",
     "runjs": "4.3.2",
     "sass": "1.26.8",
+    "commander": "^6.2.0",
+    "colors": "^1.4.0",
+    "node-fetch": "^2.6.1",
     "sass-loader": "8.0.2",
     "script-ext-html-webpack-plugin": "2.1.3",
     "serve-static": "1.13.2",

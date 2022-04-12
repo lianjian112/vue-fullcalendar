@@ -18,7 +18,10 @@
           placeholder="输入姓名和手机号..."
           @select="handleSelect"
         />
-        <el-button type="primary" class="right-menu-btn" icon="el-icon-user">添加患者</el-button>
+        <el-button type="primary" class="right-menu-btn" >
+          <span class="iconfont  icon-add-user"></span>
+          <span>添加患者</span>
+          </el-button>
       </div>
       <div class="right-menu-icons">
         <i class="el-icon-edit" />
@@ -217,6 +220,9 @@ export default {
       width: 94px;height: 36px;
       margin-left: 10px;margin-right: 86px;
       display: flex;align-items: center;justify-content: center;
+      .icon-add-user{
+        font-size: 18px;margin-right: 4px;
+      }
     }
     &-icons{
       i{
@@ -278,4 +284,5 @@ export default {
   font-size: 16px;
   }
 }
+
 </style>
