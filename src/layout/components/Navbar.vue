@@ -9,23 +9,26 @@
     <div class="right-menu">
       <div class="right-menu-search">
         <el-autocomplete
-          class="right-menu-search-input"
           v-model="state"
+          clearable
+          prefix-icon="el-icon-search"
+          class="right-menu-search-input"
           :maxlength="20"
           :fetch-suggestions="querySearchAsync"
-          placeholder="请输入内容"
+          placeholder="输入姓名和手机号..."
           @select="handleSelect"
         />
-          <el-button type="primary" class="right-menu-btn" icon="el-icon-user">添加患者</el-button>
+        <el-button type="primary" class="right-menu-btn" icon="el-icon-user">添加患者</el-button>
       </div>
       <div class="right-menu-icons">
-        <i class="el-icon-edit"></i>
-        <i class="el-icon-edit"></i>
-        <i class="el-icon-edit"></i>
+        <i class="el-icon-edit" />
+        <i class="el-icon-edit" />
+        <i class="el-icon-edit" />
       </div>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <span class="avatar-wrapper-name">lisa</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -203,9 +206,9 @@ export default {
       &-input{
         ::v-deep .el-input__inner{
           border: none;
-           min-width: 436px;
+          min-width: 436px;
           height: 36px;
-          background: rgba(239, 242, 245, 0.39);
+          background: rgba(239, 242, 245, 0.7 );
           border-radius: 2px;
         }
       }
@@ -246,11 +249,16 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 14px;
+        color: #171C33;
+        &-name{
+          margin-left: 8px;margin-right: 4px;
+        }
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
         }
 
         .el-icon-caret-bottom {
