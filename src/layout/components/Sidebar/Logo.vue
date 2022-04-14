@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import imgUrl from '../../../assets/logo/logo.png'
+import imgUrl from '@/assets/logo/logo.png'
 export default {
   name: 'SidebarLogo',
   props: {

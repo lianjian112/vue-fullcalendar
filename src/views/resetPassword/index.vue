@@ -19,24 +19,8 @@
           label-position="left"
         >
           <div class="title-container">
-            <h3 class="title">欢迎登录</h3>
+            <h3 class="title">重置密码</h3>
           </div>
-          <div class="titleList">诊所机构码</div>
-          <el-form-item prop="username">
-            <span class="svg-container">
-              <svg-icon icon-class="user" />
-            </span>
-            <el-input
-              ref="username"
-              v-model="loginForm.username"
-              placeholder="Username"
-              name="username"
-              type="text"
-              tabindex="1"
-              auto-complete="on"
-              class="el-inputClass"
-            />
-          </el-form-item>
 
           <div class="titleList">手机号</div>
           <el-form-item prop="phone">
@@ -55,7 +39,24 @@
             />
           </el-form-item>
 
-          <div class="titleList">密码</div>
+          <div class="titleList">验证码</div>
+          <el-form-item prop="username">
+            <span class="svg-container">
+              <svg-icon icon-class="user" />
+            </span>
+            <el-input
+              ref="username"
+              v-model="loginForm.username"
+              placeholder="Username"
+              name="username"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+              class="el-inputClass"
+            />
+          </el-form-item>
+
+          <div class="titleList">新密码</div>
           <el-form-item prop="password">
             <span class="svg-container">
               <svg-icon icon-class="password" />
@@ -77,12 +78,28 @@
               />
             </span>
           </el-form-item>
-          <el-checkbox class="remPassword" v-model="checked"
-            >记住密码</el-checkbox
-          >
-          <el-link class="forgetPassword" @click="forgetPassword"
-            >忘记密码</el-link
-          >
+          <div class="titleList">确认密码</div>
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              placeholder="Password"
+              name="password"
+              tabindex="2"
+              auto-complete="on"
+              @keyup.enter.native="handleLogin"
+            />
+            <span class="show-pwd" @click="showPwd">
+              <svg-icon
+                :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+              />
+            </span>
+          </el-form-item>
 
           <el-button
             :loading="loading"
@@ -94,13 +111,8 @@
               font-size: 18px;
             "
             @click.native.prevent="handleLogin"
-            >登 录</el-button
+            >提 交</el-button
           >
-
-          <div class="tips">
-            <span class="span1">还没有账号？</span>
-            <a class="span2">注册申请</a>
-          </div>
         </el-form>
       </el-col>
     </el-row>
@@ -116,7 +128,7 @@
 import { validUsername } from "@/utils/validate";
 
 export default {
-  name: "Login",
+  name: "resetPassword",
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -157,7 +169,6 @@ export default {
       loading: false,
       passwordType: "password",
       redirect: undefined,
-      checked: false,
     };
   },
   watch: {
@@ -167,6 +178,9 @@ export default {
       },
       immediate: true,
     },
+  },
+  created() {
+    console.log(this.$route.query);
   },
   methods: {
     showPwd() {
@@ -192,15 +206,11 @@ export default {
             .catch(() => {
               this.loading = false;
             });
-          // this.$router.push({ path: "/" });
         } else {
           console.log("error submit!!");
           return false;
         }
       });
-    },
-    forgetPassword() {
-      this.$router.push({ path: "/resetPassword", query: "" });
     },
   },
 };
@@ -306,19 +316,6 @@ $light_gray: #eee;
       padding: 160px 35px 0;
       margin: 0 auto;
       overflow: hidden;
-    }
-
-    .tips {
-      text-align: center;
-      .span1 {
-        font-size: 14px;
-        color: #999;
-      }
-      .span2 {
-        color: #323b4b;
-        font-size: 14px;
-        text-decoration: underline;
-      }
     }
 
     .svg-container {
