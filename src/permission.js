@@ -16,7 +16,7 @@ NProgress.configure({
 
 const whiteList = ['/login', '/resetPassword'] // no redirect whitelist
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
 
@@ -59,7 +59,7 @@ router.beforeEach(async (to, from, next) => {
       // 在免费登录白名单中，直接进入
       next()
     } else {
-      // 没有访问权限的其他页面被重定向到登录页面。  
+      // 没有访问权限的其他页面被重定向到登录页面。
       next(`/login?redirect=${to.path}`)
       NProgress.done()
     }
