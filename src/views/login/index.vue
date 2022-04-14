@@ -26,7 +26,6 @@
             <span class="svg-container">
               <svg-icon icon-class="user" />
             </span>
-
             <el-input
               ref="username"
               v-model="loginForm.username"
@@ -40,16 +39,16 @@
           </el-form-item>
 
           <div class="titleList">手机号</div>
-          <el-form-item prop="username">
+          <el-form-item prop="phone">
             <span class="svg-container">
               <span class="el-icon-phone" style="font-size: 16px"></span>
             </span>
 
             <el-input
-              ref="username"
-              v-model="loginForm.username"
-              placeholder="Username"
-              name="username"
+              ref="phone"
+              v-model="loginForm.phone"
+              placeholder="phone"
+              name="phone"
               type="text"
               tabindex="1"
               auto-complete="on"
@@ -78,22 +77,36 @@
               />
             </span>
           </el-form-item>
+          <el-checkbox class="remPassword" v-model="checked"
+            >记住密码</el-checkbox
+          >
+          <el-link class="forgetPassword">忘记密码</el-link>
 
           <el-button
             :loading="loading"
             type="primary"
-            style="width: 100%; margin-bottom: 30px"
+            style="
+              width: 100%;
+              margin-bottom: 24px;
+              height: 62px;
+              font-size: 18px;
+            "
             @click.native.prevent="handleLogin"
-            >Login</el-button
+            >登 录</el-button
           >
 
           <div class="tips">
-            <span style="margin-right: 20px">username: admin</span>
-            <span> password: any</span>
+            <span class="span1">还没有账号？</span>
+            <a class="span2">注册申请</a>
           </div>
         </el-form>
       </el-col>
     </el-row>
+    <div class="footer">
+      <span>系统配置建议: </span>
+      <a class="chrome">谷歌Chrome</a>
+      <span> 1440*800px分辨率</span>
+    </div>
   </div>
 </template>
 
@@ -105,14 +118,21 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("Please enter the correct user name"));
+        callback(new Error("请输入诊所机构码"));
+      } else {
+        callback();
+      }
+    };
+    const validatePhone = (rule, value, callback) => {
+      if (value.length < 11) {
+        callback(new Error("请输入11位手机号"));
       } else {
         callback();
       }
     };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("The password can not be less than 6 digits"));
+        callback(new Error("请输入密码"));
       } else {
         callback();
       }
@@ -121,11 +141,13 @@ export default {
       loginForm: {
         username: "admin",
         password: "111111",
+        phone: "13888888888",
       },
       loginRules: {
         username: [
           { required: true, trigger: "blur", validator: validateUsername },
         ],
+        phone: [{ required: true, trigger: "blur", validator: validatePhone }],
         password: [
           { required: true, trigger: "blur", validator: validatePassword },
         ],
@@ -133,6 +155,7 @@ export default {
       loading: false,
       passwordType: "password",
       redirect: undefined,
+      checked: false,
     };
   },
   watch: {
@@ -280,14 +303,15 @@ $light_gray: #eee;
     }
 
     .tips {
-      font-size: 14px;
-      color: #fff;
-      margin-bottom: 10px;
-
-      span {
-        &:first-of-type {
-          margin-right: 16px;
-        }
+      text-align: center;
+      .span1 {
+        font-size: 14px;
+        color: #999;
+      }
+      .span2 {
+        color: #323b4b;
+        font-size: 14px;
+        text-decoration: underline;
       }
     }
 
@@ -326,6 +350,30 @@ $light_gray: #eee;
       color: $dark_gray;
       cursor: pointer;
       user-select: none;
+    }
+
+    .remPassword {
+      margin-left: 2px;
+      margin-bottom: 20px;
+      color: #323b4b;
+      font-family: "PingFangSC-Regular";
+    }
+    .forgetPassword {
+      float: right;
+      color: #b0b7c3;
+      text-decoration: underline;
+    }
+  }
+  .footer {
+    font-size: 14px;
+    color: #b0b7c3;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    margin-left: -10%;
+    .chrome {
+      color: #002fa7;
+      text-decoration: underline;
     }
   }
 }
