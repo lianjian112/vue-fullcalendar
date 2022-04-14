@@ -1,57 +1,102 @@
 <template>
-  <div class="navbar">
-    <div class="navbar-left">
-      <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-      <!-- <breadcrumb class="breadcrumb-container" /> -->
-      <div class="organization-name">成都新华光口腔诊所</div>
-    </div>
+  <div>
+    <div class="navbarCom">
+      <div class="navbarCom-left">
+        <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+        <!-- <breadcrumb class="breadcrumb-container" /> -->
+        <div class="navbarCom-organization-name">成都新华光口腔诊所</div>
+      </div>
 
-    <div class="right-menu">
-      <div class="right-menu-search">
-        <el-autocomplete
-          v-model="state"
-          clearable
-          prefix-icon="el-icon-search"
-          class="right-menu-search-input"
-          :maxlength="20"
-          :fetch-suggestions="querySearchAsync"
-          placeholder="输入姓名和手机号..."
-          @select="handleSelect"
-        />
-        <el-button type="primary" class="right-menu-btn" >
-          <span class="iconfont  icon-add-user"></span>
-          <span>添加患者</span>
+      <div class="right-menu">
+        <div class="right-menu-search">
+          <el-autocomplete
+            v-model="state"
+            clearable
+            prefix-icon="el-icon-search"
+            class="right-menu-search-input"
+            :maxlength="20"
+            :fetch-suggestions="querySearchAsync"
+            placeholder="输入姓名和手机号..."
+            @select="handleSelect"
+          />
+          <el-button type="primary" class="right-menu-btn">
+            <span class="iconfont  icon-add-user" />
+            <span>添加患者</span>
           </el-button>
-      </div>
-      <div class="right-menu-icons">
-        <i class="el-icon-edit" />
-        <i class="el-icon-edit" />
-        <i class="el-icon-edit" />
-      </div>
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <span class="avatar-wrapper-name">lisa</span>
-          <i class="el-icon-caret-bottom" />
         </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              Home
-            </el-dropdown-item>
-          </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
+        <div class="right-menu-icons">
+          <!-- 点击消息icon -->
+          <el-badge is-dot class="badge">
+            <span class="icon-a-zu16489 iconfont" @click="showMessage=!showMessage" />
+          </el-badge>
+          <!-- 点击客服弹窗 -->
+          <el-popover
+            placement="bottom-start"
+            trigger="click"
+            popper-class="kefu-popper"
+            width="181"
+          >
+            <div class="kefu-content">
+              <p class="kefu-content-title text-center">
+                客服联系方式
+              </p>
+              <div class="text-center">
+                <el-image
+                  style="width: 38px; height: 38px"
+                  src="https://qr.api.cli.im/newqr/create?data=hello&level=H&transparent=false&bgcolor=%23FFFFFF&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&logoshape=no&size=500&kid=cliim&key=ad80fe56900a7527c6f09b0edbf4268d"
+                />
+                <div class="mb4">公众号</div>
+              </div>
+              <div>
+                <div class="kefu-content-contact">
+                  <span class="iconfont icon-a-zu16474" />
+                  <span>rcy1997@hgylqx.com</span>
+                </div>
+                <div class="kefu-content-contact">
+                  <span class="iconfont icon-a-zu15936" />
+                  <span>rcy1997@hgylqx.com</span>
+                </div>
+              </div>
+            </div>
+            <div slot="reference">
+              <i class="icon-a-zu15936 iconfont" />
+            </div>
+          </el-popover>
+
+          <a href="http://47.108.233.89:9090" target="_blank">
+            <i class="icon-a-zu15937 iconfont" />
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+        </div>
+        <!-- 点击用户头像弹窗 -->
+        <el-popover
+          class="avatar-container"
+          placement="bottom-start"
+          trigger="click"
+          popper-class="user-popper"
+          width="117"
+        >
+          <div>
+            <div class="avatar-container-label">
+              <span class="fs10 avatar-container-label-item">前台</span>
+              <span class="fs10 avatar-container-label-item">管理员</span>
+            </div>
+            <div>
+              <p class="avatar-container-options">修改密码</p>
+              <p class="avatar-container-options">我的业绩</p>
+              <p class="avatar-container-options">安全退出</p>
+            </div>
+          </div>
+          <div slot="reference" class="avatar-wrapper">
+            <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+            <span class="avatar-wrapper-name">lisa</span>
+            <i class="el-icon-caret-bottom" />
+          </div>
+        </el-popover>
+      </div>
+
     </div>
+    <!-- 点击消息中心的抽屉弹框 -->
+    <MessageDrawer :message-drawer="showMessage" />
   </div>
 </template>
 
@@ -59,17 +104,18 @@
 import { mapGetters } from 'vuex'
 // import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
+import MessageDrawer from './top/message/index.vue'
 export default {
   components: {
     // Breadcrumb,
-    Hamburger
+    Hamburger, MessageDrawer
   },
   data() {
     return {
       restaurants: [],
       state: '',
-      timeout: null
+      timeout: null,
+      showMessage: false
     }
   },
   computed: {
@@ -165,8 +211,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.navbar {
+<style lang="scss">
+.navbarCom {
   height: 56px;
   overflow: hidden;
   position: relative;
@@ -179,9 +225,6 @@ export default {
     display: flex;align-items: center;
   }
   .hamburger-container {
-    // line-height: 56px;
-    // height: 100%;
-    // float: left;
     cursor: pointer;
     transition: background .3s;
     -webkit-tap-highlight-color:transparent;
@@ -196,9 +239,6 @@ export default {
   }
 
   .right-menu {
-    // float: right;
-    // height: 100%;
-    // line-height: 50px;
     display: flex;
     align-items: center;
     &:focus {
@@ -207,9 +247,9 @@ export default {
     &-search{
       display: flex;align-items:center;
       &-input{
-        ::v-deep .el-input__inner{
+        min-width: 436px;
+        .el-input__inner{
           border: none;
-          min-width: 436px;
           height: 36px;
           background: rgba(239, 242, 245, 0.7 );
           border-radius: 2px;
@@ -225,9 +265,19 @@ export default {
       }
     }
     &-icons{
-      i{
-        margin-right: 18px;
+      display: flex;align-items:center;
+      .iconfont{
+       font-size: 20px;
         cursor: pointer;
+      }
+      .icon-a-zu15936{
+        margin: 0 18px;
+      }
+      .icon-a-zu15937{
+        margin-right: 18px;
+      }
+      .badge .is-dot{
+        left: -8px;
       }
     }
     .right-menu-item {
@@ -269,20 +319,57 @@ export default {
 
         .el-icon-caret-bottom {
           cursor: pointer;
-          //   position: absolute;
-          // right: -20px;
-          // top: 25px;
-          // font-size: 12px;
         }
       }
+
     }
   }
-}
-.organization{
-  &-name{
-  color: #BBC0CC;
-  font-size: 16px;
+  &-organization{
+    &-name{
+      color: #BBC0CC;
+      font-size: 16px;
+      }
   }
 }
 
+.avatar-container{
+  &-label{
+    margin: 8px;
+    background: rgba(255, 255, 255, 0.39);
+    border: 1px solid #F3F3F3;
+    box-shadow: 0px 16px 20px rgba(0, 18, 64, 0.06);
+    opacity: 1;
+    box-sizing: border-box;
+    border-radius: 4px;padding:6px 4px;
+    margin-right: 4px;
+    &-item{
+      background: rgba(0, 47, 167, 0.03);
+      padding: 3px 9px;font-size: 10px;
+      margin-bottom: 6px;color: $primary;
+      margin-right: 4px;
+    }
+  }
+  &-options{
+    color: $vice;padding-left: 10px;font-size: 14px;
+    line-height: 32px;cursor: pointer;
+    &:hover{
+      background: rgba(0, 47, 167, 0.39);color: #323B4B;
+    }
+  }
+}
+.user-popper{
+  padding: 0 !important;right: 0!important;
+}
+.kefu-content{
+  font-size: 12px;color: #323B4B;
+  &-title{
+    margin-bottom: 16px;margin-top: 4px;
+  }
+  &-contact{
+    color: #8A94A6;display: flex;align-items: center;
+    .iconfont{
+      margin-right: 8px;
+    }
+  }
+}
 </style>

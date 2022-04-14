@@ -5,6 +5,8 @@ $--color-primary: #002FA7;
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 
 @import "~element-ui/packages/theme-chalk/src/index";
+$primary:$--color-primary;
+$vice:#8A94A6;
 // sidebar
 $menuText:#8A94A6;
 $menuHoverText:#fff;
