@@ -83,7 +83,10 @@
             <div>
               <p class="avatar-container-options">修改密码</p>
               <p class="avatar-container-options">我的业绩</p>
-              <p class="avatar-container-options">安全退出</p>
+              <p class="avatar-container-options" @click="logout">
+                
+                安全退出
+              </p>
             </div>
           </div>
           <div slot="reference" class="avatar-wrapper">
@@ -130,9 +133,11 @@ export default {
   },
 
   methods: {
+  
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
+    // 点击安全退出
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
@@ -251,7 +256,7 @@ export default {
         .el-input__inner{
           border: none;
           height: 36px;
-          background: rgba(239, 242, 245, 0.7 );
+          background: rgba(234, 237, 240, 0.7);
           border-radius: 2px;
         }
       }
