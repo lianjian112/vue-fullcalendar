@@ -11,7 +11,7 @@ export default {
 </script>
 <style lang="scss">
 // 字体
-.fs10{
+.fs10 {
     font-size: 12px !important;
 		transform: scale(0.83);
 }

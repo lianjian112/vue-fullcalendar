@@ -127,12 +127,12 @@ module.exports = {
           config.optimization.runtimeChunk('single')
         }
       )
+  },
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: `@import "~@/styles/theme.scss";`
+      }
+    }
   }
-  // css: {
-  //   loaderOptions: {
-  //     scss: {
-  //       prependData: `@import "~@/styles/variables.scss";`
-  //     }
-  //   }
-  // }
 }

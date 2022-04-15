@@ -350,12 +350,12 @@ export default {
       background: rgba(0, 47, 167, 0.03);
       padding: 3px 9px;font-size: 10px;
       margin-bottom: 6px;
-      // color: $primary;
+      color: $primary;
       margin-right: 4px;
     }
   }
   &-options{
-    // color: $vice;
+    color: $vice;
     padding-left: 10px;font-size: 14px;
     line-height: 32px;cursor: pointer;
     &:hover{
