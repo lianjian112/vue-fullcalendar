@@ -17,7 +17,8 @@ export default {
 
 <style lang="scss" scoped>
 .news-item{
-  padding-bottom: 8px;color: $vice;
+  padding-bottom: 8px;
+  // color: $vice;
   margin-bottom: 12px;font-size: 12px;
   border-bottom: 1px solid #F3F3F3;
   &-time{

@@ -84,7 +84,6 @@
               <p class="avatar-container-options">修改密码</p>
               <p class="avatar-container-options">我的业绩</p>
               <p class="avatar-container-options" @click="logout">
-                
                 安全退出
               </p>
             </div>
@@ -133,7 +132,7 @@ export default {
   },
 
   methods: {
-  
+
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -350,12 +349,14 @@ export default {
     &-item{
       background: rgba(0, 47, 167, 0.03);
       padding: 3px 9px;font-size: 10px;
-      margin-bottom: 6px;color: $primary;
+      margin-bottom: 6px;
+      // color: $primary;
       margin-right: 4px;
     }
   }
   &-options{
-    color: $vice;padding-left: 10px;font-size: 14px;
+    // color: $vice;
+    padding-left: 10px;font-size: 14px;
     line-height: 32px;cursor: pointer;
     &:hover{
       background: rgba(0, 47, 167, 0.39);color: #323B4B;
