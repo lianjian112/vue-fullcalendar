@@ -7,6 +7,14 @@
         </div>
         <div>
           <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
+          <div class="explain">
+            <h3>申请说明</h3>
+            <p>
+              定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
+              <br>
+              定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
+            </p>
+          </div>
         </div>
       </el-col>
       <el-col :span="12" class="containerRight">
@@ -21,24 +29,8 @@
           <div class="title-container">
             <h3 class="title">注册申请</h3>
           </div>
-          <div class="titleList">诊所机构码</div>
-          <el-form-item prop="username">
-            <span class="svg-container">
-              <svg-icon icon-class="user" />
-            </span>
-            <el-input
-              ref="username"
-              v-model="loginForm.username"
-              placeholder="Username"
-              name="username"
-              type="text"
-              tabindex="1"
-              auto-complete="on"
-              class="el-inputClass"
-            />
-          </el-form-item>
 
-          <div class="titleList">手机号</div>
+          <div class="titleList">诊所联系电话</div>
           <el-form-item prop="phone">
             <span class="svg-container">
               <span class="el-icon-phone" style="font-size: 16px" />
@@ -54,53 +46,49 @@
               auto-complete="on"
             />
           </el-form-item>
+          <div class="tips1">
+            该电话号，将作为审核结果短信通知号码及诊所账号，请正确填写
+          </div>
 
-          <div class="titleList">密码</div>
-          <el-form-item prop="password">
+          <div class="titleList">验证码</div>
+          <el-form-item prop="username">
             <span class="svg-container">
-              <svg-icon icon-class="password" />
+              <svg-icon icon-class="user" />
             </span>
             <el-input
-              :key="passwordType"
-              ref="password"
-              v-model="loginForm.password"
-              :type="passwordType"
-              placeholder="Password"
-              name="password"
-              tabindex="2"
+              ref="username"
+              v-model="loginForm.username"
+              placeholder="Username"
+              name="username"
+              type="text"
+              tabindex="1"
               auto-complete="on"
-              @keyup.enter.native="handleLogin"
+              class="el-inputClass"
             />
-            <span class="show-pwd" @click="showPwd">
-              <svg-icon
-                :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-              />
-            </span>
+            <div class="verificationCode">
+              <el-button type="primary" :disabled="flag" @click="getCaptcha">{{
+                content
+              }}</el-button>
+            </div>
           </el-form-item>
-          <el-checkbox
-            v-model="checked"
-            class="remPassword"
-          >记住密码</el-checkbox>
-          <el-link
-            class="forgetPassword"
-            @click="forgetPassword"
-          >忘记密码</el-link>
 
           <el-button
             :loading="loading"
             type="primary"
+            :disabled="disabled"
             style="
               width: 100%;
               margin-bottom: 24px;
+              margin-top: 34px;
               height: 62px;
               font-size: 18px;
             "
-            @click.native.prevent="handleLogin"
-          >登 录</el-button>
+            @click.native.prevent="next"
+          >下一步</el-button>
 
           <div class="tips">
-            <span class="span1">还没有账号？</span>
-            <a class="span2">注册申请</a>
+            <span class="span1">已有账号？</span>
+            <a class="span2" @click="returnLogin">返回登录</a>
           </div>
         </el-form>
       </el-col>
@@ -158,15 +146,21 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      checked: false
+      checked: false,
+      disabled: true,
+      // 验证码按钮
+      flag: false, // 按钮是否可取
+      content: '获取验证码', // 按钮内文本
+      totalTime: 60 // 倒计时时间
     }
   },
   watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
-      },
-      immediate: true
+    'loginForm.username'() {
+      if (this.loginForm.username.length === 6) {
+        this.disabled = false
+      } else {
+        this.disabled = true
+      }
     }
   },
   methods: {
@@ -180,28 +174,25 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          this.loading = true
-          this.$store
-            .dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
-          // this.$router.push({ path: "/" });
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+    next() {},
+    // 返回登录
+    returnLogin() {
+      this.$router.push({ path: '/login', query: '' })
     },
-    forgetPassword() {
-      this.$router.push({ path: '/resetPassword', query: '' })
+    // 点击按钮倒计时
+    getCaptcha() {
+      this.flag = true // 点击之后设置按钮不可取
+      this.content = this.totalTime + 's后重新发送' // 按钮内文本
+      const clock = window.setInterval(() => {
+        this.totalTime--
+        this.content = this.totalTime + 's后重新发送'
+        if (this.totalTime < 0) {
+          window.clearInterval(clock)
+          this.content = '重新发送验证码'
+          this.totalTime = 60
+          this.flag = false // 这里重新开启
+        }
+      }, 1000)
     }
   }
 }
@@ -271,11 +262,13 @@ $cursor: rgb(39, 37, 37);
 $bg: #ffffff;
 $dark_gray: #889aa4;
 $light_gray: #eee;
-
+.el-input {
+  width: 60% !important;
+}
 .login-container {
   min-height: 100%;
   width: 100%;
-  background: url("../../assets/login_img/bg@2x.png") no-repeat;
+  background: url("../../assets/register/bg@2x.png") no-repeat;
   background-size: contain;
   overflow: hidden;
 
@@ -298,6 +291,23 @@ $light_gray: #eee;
       top: 20%;
       left: 10%;
     }
+    .explain {
+      position: absolute;
+      top: 45%;
+      left: 190px;
+      width: 257px;
+      h3 {
+        font-size: 16px;
+        font-weight: Regular;
+        color: #323b4b;
+        line-height: 22px;
+      }
+      p {
+        font-size: 14px;
+        line-height: 23px;
+        color: #8a94a6;
+      }
+    }
   }
   .containerRight {
     .login-form {
@@ -310,7 +320,8 @@ $light_gray: #eee;
     }
 
     .tips {
-      text-align: center;
+      text-align: center !important;
+      margin-top: 24px;
       .span1 {
         font-size: 14px;
         color: #999;
@@ -359,16 +370,23 @@ $light_gray: #eee;
       user-select: none;
     }
 
-    .remPassword {
-      margin-left: 2px;
-      margin-bottom: 20px;
-      color: #323b4b;
-      font-family: "PingFangSC-Regular";
+    .verificationCode {
+      button {
+        height: 64px;
+        width: 150px;
+        border-radius: 0 4px 4px 0;
+      }
+      vertical-align: middle;
+      width: 104px;
+      height: 100%;
+      display: inline-block;
     }
-    .forgetPassword {
-      float: right;
-      color: #b0b7c3;
-      text-decoration: underline;
+    .tips1 {
+      font-size: 14px;
+      color: #8a94a6;
+      position: relative;
+      top: -20px;
+      text-align: left;
     }
   }
   .footer {

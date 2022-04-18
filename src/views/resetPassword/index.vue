@@ -3,10 +3,10 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="" />
+          <img src="../../assets/login_img/logo@2x.png" alt="">
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
         </div>
       </el-col>
       <el-col :span="12" class="containerRight">
@@ -55,7 +55,9 @@
               class="el-inputClass"
             />
             <div class="verificationCode">
-              <el-button type="primary">获取验证码</el-button>
+              <el-button type="primary" :disabled="flag" @click="getCaptcha">{{
+                content
+              }}</el-button>
             </div>
           </el-form-item>
 
@@ -81,6 +83,8 @@
               />
             </span>
           </el-form-item>
+          <div class="tips">密码至少6位，且必须数字、字母、符号2种组合</div>
+
           <div class="titleList">确认密码</div>
           <el-form-item prop="password">
             <span class="svg-container">
@@ -114,8 +118,7 @@
               font-size: 18px;
             "
             @click.native.prevent="handleLogin"
-            >提 交</el-button
-          >
+          >提 交</el-button>
         </el-form>
       </el-col>
     </el-row>
@@ -128,95 +131,113 @@
 </template>
 
 <script>
-import { validUsername } from "@/utils/validate";
+import { validUsername } from '@/utils/validate'
 
 export default {
-  name: "ResetPassword",
+  name: 'ResetPassword',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("请输入诊所机构码"));
+        callback(new Error('请输入诊所机构码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePhone = (rule, value, callback) => {
       if (value.length < 11) {
-        callback(new Error("请输入11位手机号"));
+        callback(new Error('请输入11位手机号'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("请输入密码"));
+        callback(new Error('请输入密码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       loginForm: {
-        username: "admin",
-        password: "111111",
-        phone: "13888888888",
+        username: 'admin',
+        password: '111111',
+        phone: '13888888888'
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", validator: validateUsername },
+          { required: true, trigger: 'blur', validator: validateUsername }
         ],
-        phone: [{ required: true, trigger: "blur", validator: validatePhone }],
+        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword },
-        ],
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       loading: false,
-      passwordType: "password",
+      passwordType: 'password',
       redirect: undefined,
-    };
+      // 验证码按钮
+      flag: false, // 按钮是否可取
+      content: '获取验证码', // 按钮内文本
+      totalTime: 60 // 倒计时时间
+    }
   },
   watch: {
     $route: {
-      handler: function (route) {
-        this.redirect = route.query && route.query.redirect;
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
-  created() {
-    console.log(this.$route.query);
-  },
+  created() {},
   methods: {
     showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true;
+          this.loading = true
           this.$store
-            .dispatch("user/login", this.loginForm)
+            .dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
-              this.loading = false;
+              this.$router.push({ path: this.redirect || '/' })
+              this.loading = false
             })
             .catch(() => {
-              this.loading = false;
-            });
+              this.loading = false
+            })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-  },
-};
+
+    // 点击按钮倒计时
+    getCaptcha() {
+      this.flag = true // 点击之后设置按钮不可取
+      this.content = this.totalTime + 's后重新发送' // 按钮内文本
+      const clock = window.setInterval(() => {
+        this.totalTime--
+        this.content = this.totalTime + 's后重新发送'
+        if (this.totalTime < 0) {
+          window.clearInterval(clock)
+          this.content = '重新发送验证码'
+          this.totalTime = 60
+          this.flag = false // 这里重新开启
+        }
+      }, 1000)
+    }
+  }
+}
 </script>
 
 <style lang="scss">
@@ -382,6 +403,12 @@ $light_gray: #eee;
     }
     .el-inputClass {
       width: 270px !important;
+    }
+    .tips {
+      font-size: 14px;
+      color: #8a94a6;
+      position: relative;
+      top: -20px;
     }
   }
   .footer {
