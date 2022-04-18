@@ -189,8 +189,6 @@ export default {
       immediate: true
     }
   },
-  created() {
-  },
   created() {},
   methods: {
     showPwd() {

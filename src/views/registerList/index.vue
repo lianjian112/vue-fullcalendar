@@ -3,15 +3,15 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="" />
+          <img src="../../assets/login_img/logo@2x.png" alt="">
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
           <div class="explain">
             <h3>申请说明</h3>
             <p>
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
-              <br />
+              <br>
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
             </p>
           </div>
@@ -49,8 +49,8 @@
           <div class="titleList">所在地区</div>
           <!--省市三级联动-->
           <el-cascader
-            placeholder="请选择"
             v-model="location"
+            placeholder="请选择"
             :options="options"
             :props="{ value: 'label' }"
             class="Provinces"
@@ -87,13 +87,13 @@
           </el-form-item>
 
           <el-upload
+            ref="uploadSuccess"
             action="#"
             list-type="picture-card"
             :auto-upload="false"
             :multiple="false"
             class="upload"
             :on-change="success"
-            ref="uploadSuccess"
           >
             <span class="iconfont icon-a-zu16474 uploadIcon" />
             <i slot="default" class="uploadText">营业执照</i>
@@ -102,7 +102,7 @@
                 class="el-upload-list__item-thumbnail"
                 :src="file.url"
                 alt=""
-              />
+              >
               <span class="el-upload-list__item-actions">
                 <span
                   class="el-upload-list__item-preview"
@@ -121,16 +121,16 @@
             </div>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
+            <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
           <el-upload
+            ref="uploadSuccess2"
             action="#"
             list-type="picture-card"
             :auto-upload="false"
             :multiple="false"
             class="upload"
             :on-change="success2"
-            ref="uploadSuccess2"
           >
             <span
               class="iconfont icon-a-zu16474 uploadIcon"
@@ -143,7 +143,7 @@
                 class="el-upload-list__item-thumbnail"
                 :src="file.url"
                 alt=""
-              />
+              >
               <span class="el-upload-list__item-actions">
                 <span
                   class="el-upload-list__item-preview"
@@ -162,27 +162,26 @@
             </div>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
+            <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
 
-          <el-checkbox v-model="checked" class="checkBox"
-            >已阅读并接受《用户服务条款》及《隐私协议》</el-checkbox
-          >
+          <el-checkbox
+            v-model="checked"
+            class="checkBox"
+          >已阅读并接受《用户服务条款》及《隐私协议》</el-checkbox>
           <div class="floatBtn">
             <el-button
               :loading="loading"
               plain
               class="footerBtn"
               @click.native.prevent="last"
-              >上一步</el-button
-            >
+            >上一步</el-button>
             <el-button
               :loading="loading"
               type="primary"
               class="footerBtn"
               @click.native.prevent="submit"
-              >提 交</el-button
-            >
+            >提 交</el-button>
           </div>
         </el-form>
       </el-col>
@@ -196,110 +195,110 @@
 </template>
 
 <script>
-import { validUsername } from "@/utils/validate";
-import { regionData } from "element-china-area-data";
+import { validUsername } from '@/utils/validate'
+import { regionData } from 'element-china-area-data'
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("请输入诊所机构码"));
+        callback(new Error('请输入诊所机构码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePhone = (rule, value, callback) => {
       if (value.length < 11) {
-        callback(new Error("请输入11位手机号"));
+        callback(new Error('请输入11位手机号'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("请输入密码"));
+        callback(new Error('请输入密码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       loginForm: {
-        username: "admin",
-        password: "111111",
-        phone: "13888888888",
+        username: 'admin',
+        password: '111111',
+        phone: '13888888888'
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", validator: validateUsername },
+          { required: true, trigger: 'blur', validator: validateUsername }
         ],
-        phone: [{ required: true, trigger: "blur", validator: validatePhone }],
+        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword },
-        ],
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       loading: false,
-      passwordType: "password",
+      passwordType: 'password',
       redirect: undefined,
       checked: false,
       options: regionData,
       location: [],
-      dialogImageUrl: "",
+      dialogImageUrl: '',
       dialogVisible: false,
       disabled: false,
-      imgFile: [],
-    };
+      imgFile: []
+    }
   },
   watch: {
     location() {
-      console.log(this.location);
-    },
+      console.log(this.location)
+    }
   },
   created() {},
   methods: {
     showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
     handleRemove(file) {
-      this.$refs.uploadSuccess.clearFiles();
-      this.$refs.uploadSuccess.$el.children[1].style.display = "block";
+      this.$refs.uploadSuccess.clearFiles()
+      this.$refs.uploadSuccess.$el.children[1].style.display = 'block'
     },
     handleRemove2(file) {
-      this.$refs.uploadSuccess2.clearFiles();
-      this.$refs.uploadSuccess2.$el.children[1].style.display = "block";
+      this.$refs.uploadSuccess2.clearFiles()
+      this.$refs.uploadSuccess2.$el.children[1].style.display = 'block'
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
     },
-    //上传成功
+    // 上传成功
     success(response, file, fileList) {
-      console.log(response);
-      console.log(file);
-      this.imgFile = file;
-      console.log(fileList);
-      this.$refs.uploadSuccess.$el.children[1].style.display = "none";
+      console.log(response)
+      console.log(file)
+      this.imgFile = file
+      console.log(fileList)
+      this.$refs.uploadSuccess.$el.children[1].style.display = 'none'
     },
     success2(response, file, fileList) {
-      console.log(response);
-      console.log(file);
-      console.log(fileList);
-      this.$refs.uploadSuccess2.$el.children[1].style.display = "none";
+      console.log(response)
+      console.log(file)
+      console.log(fileList)
+      this.$refs.uploadSuccess2.$el.children[1].style.display = 'none'
     },
-    last(){
+    last() {
       this.$router.go(-1)
     },
-    submit(){
+    submit() {
       this.$router.push()
     }
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss">

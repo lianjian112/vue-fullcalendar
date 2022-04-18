@@ -3,15 +3,15 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="" />
+          <img src="../../assets/login_img/logo@2x.png" alt="">
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
           <div class="explain">
             <h3>申请说明</h3>
             <p>
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
-              <br />
+              <br>
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
             </p>
           </div>
@@ -84,8 +84,7 @@
               font-size: 18px;
             "
             @click.native.prevent="next"
-            >下一步</el-button
-          >
+          >下一步</el-button>
 
           <div class="tips">
             <span class="span1">已有账号？</span>
@@ -103,102 +102,102 @@
 </template>
 
 <script>
-import { validUsername } from "@/utils/validate";
+import { validUsername } from '@/utils/validate'
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("请输入诊所机构码"));
+        callback(new Error('请输入诊所机构码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePhone = (rule, value, callback) => {
       if (value.length < 11) {
-        callback(new Error("请输入11位手机号"));
+        callback(new Error('请输入11位手机号'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("请输入密码"));
+        callback(new Error('请输入密码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       loginForm: {
-        username: "admin",
-        password: "111111",
-        phone: "13888888888",
+        username: 'admin',
+        password: '111111',
+        phone: '13888888888'
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", validator: validateUsername },
+          { required: true, trigger: 'blur', validator: validateUsername }
         ],
-        phone: [{ required: true, trigger: "blur", validator: validatePhone }],
+        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword },
-        ],
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       loading: false,
-      passwordType: "password",
+      passwordType: 'password',
       redirect: undefined,
       checked: false,
       disabled: true,
       // 验证码按钮
       flag: false, // 按钮是否可取
-      content: "获取验证码", // 按钮内文本
-      totalTime: 60, // 倒计时时间
-    };
+      content: '获取验证码', // 按钮内文本
+      totalTime: 60 // 倒计时时间
+    }
   },
   watch: {
-    "loginForm.username"() {
+    'loginForm.username'() {
       if (this.loginForm.username.length === 6) {
-        this.disabled = false;
+        this.disabled = false
       } else {
-        this.disabled = true;
+        this.disabled = true
       }
-    },
+    }
   },
   methods: {
     showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
     next() {
-      this.$router.push({ path: "/registerList", query: "" });
+      this.$router.push({ path: '/registerList', query: '' })
     },
     // 返回登录
     returnLogin() {
-      this.$router.push({ path: "/login", query: "" });
+      this.$router.push({ path: '/login', query: '' })
     },
     // 点击按钮倒计时
     getCaptcha() {
-      this.flag = true; // 点击之后设置按钮不可取
-      this.content = this.totalTime + "s后重新发送"; // 按钮内文本
+      this.flag = true // 点击之后设置按钮不可取
+      this.content = this.totalTime + 's后重新发送' // 按钮内文本
       const clock = window.setInterval(() => {
-        this.totalTime--;
-        this.content = this.totalTime + "s后重新发送";
+        this.totalTime--
+        this.content = this.totalTime + 's后重新发送'
         if (this.totalTime < 0) {
-          window.clearInterval(clock);
-          this.content = "重新发送验证码";
-          this.totalTime = 60;
-          this.flag = false; // 这里重新开启
+          window.clearInterval(clock)
+          this.content = '重新发送验证码'
+          this.totalTime = 60
+          this.flag = false // 这里重新开启
         }
-      }, 1000);
-    },
-  },
-};
+      }, 1000)
+    }
+  }
+}
 </script>
 
 <style lang="scss">
