@@ -30,27 +30,7 @@
             <h3 class="title">注册申请</h3>
           </div>
 
-          <div class="titleList">诊所联系电话</div>
-          <el-form-item prop="phone">
-            <span class="svg-container">
-              <span class="el-icon-phone" style="font-size: 16px" />
-            </span>
-
-            <el-input
-              ref="phone"
-              v-model="loginForm.phone"
-              placeholder="phone"
-              name="phone"
-              type="text"
-              tabindex="1"
-              auto-complete="on"
-            />
-          </el-form-item>
-          <div class="tips1">
-            该电话号，将作为审核结果短信通知号码及诊所账号，请正确填写
-          </div>
-
-          <div class="titleList">验证码</div>
+          <div class="titleList">诊所名称</div>
           <el-form-item prop="username">
             <span class="svg-container">
               <svg-icon icon-class="user" />
@@ -58,38 +38,151 @@
             <el-input
               ref="username"
               v-model="loginForm.username"
-              placeholder="Username"
+              placeholder="请输入诊所名称"
               name="username"
               type="text"
               tabindex="1"
               auto-complete="on"
-              class="el-inputClass"
             />
-            <div class="verificationCode">
-              <el-button type="primary" :disabled="flag" @click="getCaptcha">{{
-                content
-              }}</el-button>
-            </div>
           </el-form-item>
 
-          <el-button
-            :loading="loading"
-            type="primary"
-            :disabled="disabled"
-            style="
-              width: 100%;
-              margin-bottom: 24px;
-              margin-top: 34px;
-              height: 62px;
-              font-size: 18px;
-            "
-            @click.native.prevent="next"
-            >下一步</el-button
-          >
+          <div class="titleList">所在地区</div>
+          <!--省市三级联动-->
+          <el-cascader
+            placeholder="请选择"
+            v-model="location"
+            :options="options"
+            :props="{ value: 'label' }"
+            class="Provinces"
+          ></el-cascader>
 
-          <div class="tips">
-            <span class="span1">已有账号？</span>
-            <a class="span2" @click="returnLogin">返回登录</a>
+          <div class="titleList">详细地址</div>
+          <el-form-item prop="username" style="height: 100px">
+            <span class="svg-container"> </span>
+            <el-input
+              ref="username"
+              v-model="loginForm.username"
+              placeholder="请输入地址"
+              name="username"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+              style="height: 100px"
+            />
+          </el-form-item>
+          <div class="titleList">诊所联系人</div>
+          <el-form-item prop="username">
+            <span class="svg-container">
+              <svg-icon icon-class="user" />
+            </span>
+            <el-input
+              ref="username"
+              v-model="loginForm.username"
+              placeholder="请输入联系人"
+              name="username"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+            />
+          </el-form-item>
+
+          <el-upload
+            action="#"
+            list-type="picture-card"
+            :auto-upload="false"
+            :multiple="false"
+            class="upload"
+            :on-change="success"
+            ref="uploadSuccess"
+          >
+            <span class="iconfont icon-a-zu16474 uploadIcon" />
+            <i slot="default" class="uploadText">营业执照</i>
+            <div slot="file" slot-scope="{ file }">
+              <img
+                class="el-upload-list__item-thumbnail"
+                :src="file.url"
+                alt=""
+              />
+              <span class="el-upload-list__item-actions">
+                <span
+                  class="el-upload-list__item-preview"
+                  @click="handlePictureCardPreview(file)"
+                >
+                  <i class="el-icon-zoom-in"></i>
+                </span>
+                <span
+                  v-if="!disabled"
+                  class="el-upload-list__item-delete"
+                  @click="handleRemove(file)"
+                >
+                  <i class="el-icon-delete"></i>
+                </span>
+              </span>
+            </div>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="" />
+          </el-dialog>
+          <el-upload
+            action="#"
+            list-type="picture-card"
+            :auto-upload="false"
+            :multiple="false"
+            class="upload"
+            :on-change="success2"
+            ref="uploadSuccess2"
+          >
+            <span
+              class="iconfont icon-a-zu16474 uploadIcon"
+              style="left: 32px"
+            />
+            <i slot="default" class="uploadText">机构许可证</i>
+            <i slot="default" class="uploadText1">(非必填)</i>
+            <div slot="file" slot-scope="{ file }">
+              <img
+                class="el-upload-list__item-thumbnail"
+                :src="file.url"
+                alt=""
+              />
+              <span class="el-upload-list__item-actions">
+                <span
+                  class="el-upload-list__item-preview"
+                  @click="handlePictureCardPreview(file)"
+                >
+                  <i class="el-icon-zoom-in"></i>
+                </span>
+                <span
+                  v-if="!disabled"
+                  class="el-upload-list__item-delete"
+                  @click="handleRemove2(file)"
+                >
+                  <i class="el-icon-delete"></i>
+                </span>
+              </span>
+            </div>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="" />
+          </el-dialog>
+
+          <el-checkbox v-model="checked" class="checkBox"
+            >已阅读并接受《用户服务条款》及《隐私协议》</el-checkbox
+          >
+          <div class="floatBtn">
+            <el-button
+              :loading="loading"
+              plain
+              class="footerBtn"
+              @click.native.prevent="last"
+              >上一步</el-button
+            >
+            <el-button
+              :loading="loading"
+              type="primary"
+              class="footerBtn"
+              @click.native.prevent="submit"
+              >提 交</el-button
+            >
           </div>
         </el-form>
       </el-col>
@@ -104,7 +197,7 @@
 
 <script>
 import { validUsername } from "@/utils/validate";
-
+import { regionData } from "element-china-area-data";
 export default {
   name: "Login",
   data() {
@@ -148,22 +241,20 @@ export default {
       passwordType: "password",
       redirect: undefined,
       checked: false,
-      disabled: true,
-      // 验证码按钮
-      flag: false, // 按钮是否可取
-      content: "获取验证码", // 按钮内文本
-      totalTime: 60, // 倒计时时间
+      options: regionData,
+      location: [],
+      dialogImageUrl: "",
+      dialogVisible: false,
+      disabled: false,
+      imgFile: [],
     };
   },
   watch: {
-    "loginForm.username"() {
-      if (this.loginForm.username.length === 6) {
-        this.disabled = false;
-      } else {
-        this.disabled = true;
-      }
+    location() {
+      console.log(this.location);
     },
   },
+  created() {},
   methods: {
     showPwd() {
       if (this.passwordType === "password") {
@@ -175,28 +266,38 @@ export default {
         this.$refs.password.focus();
       });
     },
-    next() {
-      this.$router.push({ path: "/registerList", query: "" });
+    handleRemove(file) {
+      this.$refs.uploadSuccess.clearFiles();
+      this.$refs.uploadSuccess.$el.children[1].style.display = "block";
     },
-    // 返回登录
-    returnLogin() {
-      this.$router.push({ path: "/login", query: "" });
+    handleRemove2(file) {
+      this.$refs.uploadSuccess2.clearFiles();
+      this.$refs.uploadSuccess2.$el.children[1].style.display = "block";
     },
-    // 点击按钮倒计时
-    getCaptcha() {
-      this.flag = true; // 点击之后设置按钮不可取
-      this.content = this.totalTime + "s后重新发送"; // 按钮内文本
-      const clock = window.setInterval(() => {
-        this.totalTime--;
-        this.content = this.totalTime + "s后重新发送";
-        if (this.totalTime < 0) {
-          window.clearInterval(clock);
-          this.content = "重新发送验证码";
-          this.totalTime = 60;
-          this.flag = false; // 这里重新开启
-        }
-      }, 1000);
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
+    //上传成功
+    success(response, file, fileList) {
+      console.log(response);
+      console.log(file);
+      this.imgFile = file;
+      console.log(fileList);
+      this.$refs.uploadSuccess.$el.children[1].style.display = "none";
+    },
+    success2(response, file, fileList) {
+      console.log(response);
+      console.log(file);
+      console.log(fileList);
+      this.$refs.uploadSuccess2.$el.children[1].style.display = "none";
+    },
+    last(){
+      this.$router.go(-1)
+    },
+    submit(){
+      this.$router.push()
+    }
   },
 };
 </script>
@@ -259,15 +360,29 @@ $cursor: rgb(39, 37, 37);
     }
   }
 }
+.login-container .el-input input {
+  color: black !important;
+}
+.upload .el-upload--picture-card {
+  width: 136px !important;
+  height: 100px !important;
+  .el-icon-plus {
+    position: relative;
+    top: -30px;
+    left: 15px;
+  }
+}
+.upload {
+  .el-upload-list--picture-card .el-upload-list__item {
+    width: 136px !important;
+    height: 100px !important;
+  }
+}
 </style>
-
 <style lang="scss" scoped>
 $bg: #ffffff;
 $dark_gray: #889aa4;
 $light_gray: #eee;
-.el-input {
-  width: 60% !important;
-}
 .login-container {
   min-height: 100%;
   width: 100%;
@@ -291,12 +406,12 @@ $light_gray: #eee;
       font-size: 28px;
       line-height: 40px;
       position: absolute;
-      top: 20%;
+      top: 15%;
       left: 10%;
     }
     .explain {
       position: absolute;
-      top: 45%;
+      top: 34%;
       left: 190px;
       width: 257px;
       h3 {
@@ -317,7 +432,7 @@ $light_gray: #eee;
       position: relative;
       width: 520px;
       max-width: 100%;
-      padding: 160px 35px 0;
+      padding: 55px 35px 0;
       margin: 0 auto;
       overflow: hidden;
     }
@@ -390,6 +505,49 @@ $light_gray: #eee;
       position: relative;
       top: -20px;
       text-align: left;
+    }
+    .Provinces {
+      width: 448px;
+      height: 64px;
+      padding: 8px 5px 12px 30px;
+      background: #eaf0f7;
+      margin-bottom: 22px;
+    }
+    .upload {
+      float: left;
+      margin-right: 20px;
+      position: relative;
+      .uploadIcon {
+        font-size: 25px;
+        position: relative;
+        top: -35px;
+        left: 27px;
+      }
+      .uploadText {
+        font-size: 14px;
+        position: relative;
+        top: -10px;
+        left: -12px;
+      }
+      .uploadText1 {
+        font-size: 14px;
+        position: absolute;
+        top: 11px;
+        left: 42px;
+      }
+    }
+    .checkBox {
+      margin-top: 20px;
+    }
+    .floatBtn {
+      text-align: right;
+      .footerBtn {
+        width: 136px;
+        margin-bottom: 24px;
+        margin-top: 10px;
+        height: 62px;
+        font-size: 18px;
+      }
     }
   }
   .footer {
