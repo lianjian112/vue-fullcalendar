@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <baseSearch />
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -45,7 +46,7 @@
 
 <script>
 import { getList } from '@/api/table'
-
+import baseSearch from './components/search.vue'
 export default {
   filters: {
     statusFilter(status) {
@@ -57,6 +58,7 @@ export default {
       return statusMap[status]
     }
   },
+  components: { baseSearch },
   data() {
     return {
       list: null,
@@ -77,3 +79,4 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped></style>

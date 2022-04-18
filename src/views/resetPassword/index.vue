@@ -174,11 +174,15 @@ export default {
       },
       loading: false,
       passwordType: 'password',
+<<<<<<< HEAD
       redirect: undefined,
       // 验证码按钮
       flag: false, // 按钮是否可取
       content: '获取验证码', // 按钮内文本
       totalTime: 60 // 倒计时时间
+=======
+      redirect: undefined
+>>>>>>> b365509f8378574a765e5a240b573aa123b83311
     }
   },
   watch: {
@@ -188,6 +192,12 @@ export default {
       },
       immediate: true
     }
+<<<<<<< HEAD
+=======
+  },
+  created() {
+    console.log(this.$route.query)
+>>>>>>> b365509f8378574a765e5a240b573aa123b83311
   },
   created() {},
   methods: {
@@ -219,6 +229,7 @@ export default {
           return false
         }
       })
+<<<<<<< HEAD
     },
 
     // 点击按钮倒计时
@@ -235,6 +246,8 @@ export default {
           this.flag = false // 这里重新开启
         }
       }, 1000)
+=======
+>>>>>>> b365509f8378574a765e5a240b573aa123b83311
     }
   }
 }

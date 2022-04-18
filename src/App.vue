@@ -11,6 +11,9 @@ export default {
 </script>
 <style lang="scss">
 // 字体
+div{
+  color: #323B4B;font-size: 14px;
+}
 .fs10 {
     font-size: 12px !important;
 		transform: scale(0.83);

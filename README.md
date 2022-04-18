@@ -47,6 +47,8 @@ yarn iconfont -d <iconfont url>
 
 [prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
+考虑到多人协同开发为保证代码统一风格和效率问题：建议使用vscode编辑器并且安装eslint和styleint插件！
+强烈建议保存代码的时候自动去使用eslint和stylelint格式化代码
 ## Commitlint
 
 ```

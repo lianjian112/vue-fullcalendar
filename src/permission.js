@@ -14,10 +14,10 @@ NProgress.configure({
   showSpinner: false
 }) // NProgress Configuration
 
-//路由白名单
+// 路由白名单
 const whiteList = ['/login', '/resetPassword', '/register'] // no redirect whitelist
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
 
