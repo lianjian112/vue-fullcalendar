@@ -3,10 +3,10 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="" />
+          <img src="../../assets/login_img/logo@2x.png" alt="">
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
         </div>
       </el-col>
       <el-col :span="12" class="containerRight">
@@ -77,12 +77,14 @@
               />
             </span>
           </el-form-item>
-          <el-checkbox v-model="checked" class="remPassword"
-            >记住密码</el-checkbox
-          >
-          <el-link class="forgetPassword" @click="forgetPassword"
-            >忘记密码</el-link
-          >
+          <el-checkbox
+            v-model="checked"
+            class="remPassword"
+          >记住密码</el-checkbox>
+          <el-link
+            class="forgetPassword"
+            @click="forgetPassword"
+          >忘记密码</el-link>
 
           <el-button
             :loading="loading"
@@ -94,8 +96,7 @@
               font-size: 18px;
             "
             @click.native.prevent="handleLogin"
-            >登 录</el-button
-          >
+          >登 录</el-button>
 
           <div class="tips">
             <span class="span1">还没有账号？</span>
@@ -113,102 +114,102 @@
 </template>
 
 <script>
-import { validUsername } from "@/utils/validate";
+import { validUsername } from '@/utils/validate'
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("请输入诊所机构码"));
+        callback(new Error('请输入诊所机构码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePhone = (rule, value, callback) => {
       if (value.length < 11) {
-        callback(new Error("请输入11位手机号"));
+        callback(new Error('请输入11位手机号'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("请输入密码"));
+        callback(new Error('请输入密码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       loginForm: {
-        username: "admin",
-        password: "111111",
-        phone: "13888888888",
+        username: 'admin',
+        password: '111111',
+        phone: '13888888888'
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", validator: validateUsername },
+          { required: true, trigger: 'blur', validator: validateUsername }
         ],
-        phone: [{ required: true, trigger: "blur", validator: validatePhone }],
+        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword },
-        ],
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       loading: false,
-      passwordType: "password",
+      passwordType: 'password',
       redirect: undefined,
-      checked: false,
-    };
+      checked: false
+    }
   },
   watch: {
     $route: {
-      handler: function (route) {
-        this.redirect = route.query && route.query.redirect;
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   methods: {
     showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true;
+          this.loading = true
           this.$store
-            .dispatch("user/login", this.loginForm)
+            .dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
-              this.loading = false;
+              this.$router.push({ path: this.redirect || '/' })
+              this.loading = false
             })
             .catch(() => {
-              this.loading = false;
-            });
+              this.loading = false
+            })
           // this.$router.push({ path: "/" });
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    //忘记密码
+    // 忘记密码
     forgetPassword() {
-      this.$router.push({ path: "/resetPassword", query: "" });
+      this.$router.push({ path: '/resetPassword', query: '' })
     },
-    //注册中心
+    // 注册中心
     register() {
-      this.$router.push({ path: "/register", query: "" });
-    },
-  },
-};
+      this.$router.push({ path: '/register', query: '' })
+    }
+  }
+}
 </script>
 
 <style lang="scss">

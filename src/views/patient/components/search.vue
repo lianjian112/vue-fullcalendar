@@ -45,7 +45,14 @@
         </div>
         <div class="search-user flex">
           <div>个人信息：</div>
-          <div class=""></div>
+          <div class="search-user-form">
+            <el-form-item label-width="100px" label="患者类型">
+              <el-select placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
         </div>
       </el-form>
     </div>
