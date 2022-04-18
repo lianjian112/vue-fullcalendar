@@ -55,7 +55,9 @@
               class="el-inputClass"
             />
             <div class="verificationCode">
-              <el-button type="primary">获取验证码</el-button>
+              <el-button type="primary" :disabled="flag" @click="getCaptcha">{{
+                content
+              }}</el-button>
             </div>
           </el-form-item>
 
@@ -81,6 +83,8 @@
               />
             </span>
           </el-form-item>
+          <div class="tips">密码至少6位，且必须数字、字母、符号2种组合</div>
+
           <div class="titleList">确认密码</div>
           <el-form-item prop="password">
             <span class="svg-container">
@@ -170,7 +174,11 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      // 验证码按钮
+      flag: false, // 按钮是否可取
+      content: '获取验证码', // 按钮内文本
+      totalTime: 60 // 倒计时时间
     }
   },
   watch: {
@@ -182,8 +190,8 @@ export default {
     }
   },
   created() {
-    console.log(this.$route.query)
   },
+  created() {},
   methods: {
     showPwd() {
       if (this.passwordType === 'password') {
@@ -213,6 +221,22 @@ export default {
           return false
         }
       })
+    },
+
+    // 点击按钮倒计时
+    getCaptcha() {
+      this.flag = true // 点击之后设置按钮不可取
+      this.content = this.totalTime + 's后重新发送' // 按钮内文本
+      const clock = window.setInterval(() => {
+        this.totalTime--
+        this.content = this.totalTime + 's后重新发送'
+        if (this.totalTime < 0) {
+          window.clearInterval(clock)
+          this.content = '重新发送验证码'
+          this.totalTime = 60
+          this.flag = false // 这里重新开启
+        }
+      }, 1000)
     }
   }
 }
@@ -381,6 +405,12 @@ $light_gray: #eee;
     }
     .el-inputClass {
       width: 270px !important;
+    }
+    .tips {
+      font-size: 14px;
+      color: #8a94a6;
+      position: relative;
+      top: -20px;
     }
   }
   .footer {
