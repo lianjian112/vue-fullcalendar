@@ -189,6 +189,7 @@ export default {
           this.$store
             .dispatch("user/login", data)
             .then(() => {
+              console.log("登陆成功");
               this.$router.push({ path: this.redirect || "/" });
               this.loading = false;
             })
@@ -218,7 +219,7 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg: #283443;
+$bg: #eaf0f7;
 $light_gray: rgb(255, 255, 255);
 $cursor: rgb(39, 37, 37);
 

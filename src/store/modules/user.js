@@ -44,12 +44,13 @@ const actions = {
   }, userInfo) {
     console.log(userInfo);
     return new Promise((resolve, reject) => {
-      login(userInfo).then(response => {
-        const {
-          data
-        } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      login(userInfo).then(res => {
+        console.log(res);
+        // const {
+        //   data
+        // } = res
+        // commit('SET_TOKEN', data)
+        // setToken(data)
         resolve()
       }).catch(error => {
         reject(error)
@@ -58,61 +59,61 @@ const actions = {
   },
 
   // get user info
-  getInfo({
-    commit,
-    state
-  }) {
-    return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const {
-          data
-        } = response
+  // getInfo({
+  //   commit,
+  //   state
+  // }) {
+  //   return new Promise((resolve, reject) => {
+  //     getInfo(state.token).then(response => {
+  //       const {
+  //         data
+  //       } = response
 
-        if (!data) {
-          return reject('Verification failed, please Login again.')
-        }
+  //       if (!data) {
+  //         return reject('Verification failed, please Login again.')
+  //       }
 
-        const {
-          name,
-          avatar
-        } = data
+  //       const {
+  //         name,
+  //         avatar
+  //       } = data
 
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
+  //       commit('SET_NAME', name)
+  //       commit('SET_AVATAR', avatar)
+  //       resolve(data)
+  //     }).catch(error => {
+  //       reject(error)
+  //     })
+  //   })
+  // },
 
   // user logout
-  logout({
-    commit,
-    state
-  }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
+  // logout({
+  //   commit,
+  //   state
+  // }) {
+  //   return new Promise((resolve, reject) => {
+  //     logout(state.token).then(() => {
+  //       removeToken() // must remove  token  first
+  //       resetRouter()
+  //       commit('RESET_STATE')
+  //       resolve()
+  //     }).catch(error => {
+  //       reject(error)
+  //     })
+  //   })
+  // },
 
   // remove token
-  resetToken({
-    commit
-  }) {
-    return new Promise(resolve => {
-      removeToken() // must remove  token  first
-      commit('RESET_STATE')
-      resolve()
-    })
-  }
+  // resetToken({
+  //   commit
+  // }) {
+  //   return new Promise(resolve => {
+  //     removeToken() // must remove  token  first
+  //     commit('RESET_STATE')
+  //     resolve()
+  //   })
+  // }
 }
 
 export default {

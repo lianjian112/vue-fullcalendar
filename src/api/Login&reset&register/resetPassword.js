@@ -1,23 +1,14 @@
 import request from '@/utils/request'
 
-export function login(data) {
+export function rePwdCode(data) {
   return request({
-    url: '/vue-admin-template/user/login',
-    method: 'post',
-    data
-  })
-}
-
-export function getInfo(token) {
-  return request({
-    url: '/vue-admin-template/user/info',
+    url: '/sms-api/rePwdCode',
     method: 'get',
-    params: {
-      token
-    }
+    params: data
   })
 }
 
+//重置密码
 export function rePassword(data) {
   return request({
     url: '/user-api/rePassword',
