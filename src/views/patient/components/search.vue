@@ -134,15 +134,8 @@
               </div>
             </div>
             <!-- 已选择的数据回显 -->
-            <div class="search-form-data">
-              <div class="search-form-data-item">
-                <span>初诊医生:周良</span>
-                <span class="iconfont icon-a-zu16493 cha"></span>
-              </div>
-              <div class="search-form-data-item">
-                <span>出诊时间:2021-03-01至2021-03-30</span>
-                <span class="iconfont icon-a-zu16493 cha"></span>
-              </div>
+            <div class="selectedData">
+              <selected-data></selected-data>
             </div>
           </div>
         </el-collapse-transition>
@@ -153,8 +146,10 @@
 </template>
 
 <script>
+import selectedData from './selected-data.vue'
 export default {
   name: 'BaseSearch',
+  components: { selectedData },
   data() {
     return {
       showMoreFilter: false, // 是否展示高级筛选
@@ -189,19 +184,6 @@ export default {
   }
   &-form{
     position: relative;
-    &-data{
-      margin-top: 26px;margin-bottom: 8px;font-size: 12px;display:flex;
-      &-item{
-        color: $primary;margin-right: 16px;
-        font-family: PingFang SC;font-weight: 400;
-      }
-      &-item:last-child{
-        margin-right: 0px;
-      }
-      .iconfont{
-        font-size: 12px;margin-left: 6px;color:$black;
-      }
-    }
   }
   .form-part1{
     padding: 24px 16px;
@@ -213,8 +195,8 @@ export default {
     background: #fff;box-shadow: 0px 16px 50px rgba(0, 18, 64, 0.06);
   }
   ::v-deep .el-input__inner{
-    width: 230px;
-    // max-width: 230px;
+    width: 240px;
+    // max-width: 240px;
   }
   &-content {
     background: #fff;
@@ -244,7 +226,7 @@ export default {
     }
     &-age{
       border:1px solid #DCDFE6;
-      width: 230px;
+      width: 240px;
       border-radius:4px;
       ::v-deep .el-input__inner{
         border: none;
@@ -253,5 +235,8 @@ export default {
       }
     }
   }
+}
+.selectedData{
+   margin-top: 26px;margin-bottom: 8px;
 }
 </style>

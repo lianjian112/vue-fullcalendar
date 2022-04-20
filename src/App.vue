@@ -12,8 +12,10 @@ export default {
 <style lang="scss">
 // 字体
 div{
-  color: #323B4B;font-size: 14px;
+  color: #323B4B;
+  // font-size: 14px;
 }
+.f12{font-size: 12px;}
 .fs10 {
     font-size: 12px !important;
 		transform: scale(0.83);
@@ -44,5 +46,12 @@ div{
 }
 .mb4{
   margin-bottom: 16px;
+}
+.mr4{
+margin-right: 16px;
+}
+// 其他
+.pointer{
+  cursor: pointer;
 }
 </style>

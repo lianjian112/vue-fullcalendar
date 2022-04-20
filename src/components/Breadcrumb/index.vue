@@ -67,8 +67,13 @@ export default {
 .app-breadcrumb.el-breadcrumb {
   display: inline-block;
   font-size: 14px;
-  line-height: 50px;
-  margin-left: 8px;
+  line-height: 40px;
+  margin-top: -12px;
+  // margin-bottom: -12px;
+  padding-left: 16px;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
 
   .no-redirect {
     color: #97a8be;

@@ -86,7 +86,14 @@ export const constantRoutes = [{
     component: () => import('@/views/patient/list'),
     meta: {
       title: '患者中心'
-      // icon: 'table'
+    }
+  },
+  {
+    path: 'appointment',
+    name: 'Appointment',
+    component: () => import('@/views/patient/Appointment'),
+    meta: {
+      title: '新建预约'
     }
   },
   {

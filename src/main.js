@@ -14,6 +14,10 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+// 注册全局自定义组件
+
+import vueComs from './commonComs.js'
+vueComs()
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

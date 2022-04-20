@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="boxShadow">
     <div class="navbarCom">
       <div class="navbarCom-left">
         <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
@@ -97,6 +97,7 @@
       </div>
 
     </div>
+    <breadcrumb class="breadcrumb-container" />
     <!-- 点击消息中心的抽屉弹框 -->
     <MessageDrawer :message-drawer="showMessage" />
   </div>
@@ -104,12 +105,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-// import Breadcrumb from '@/components/Breadcrumb'
+import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import MessageDrawer from './top/message/index.vue'
 export default {
   components: {
-    // Breadcrumb,
+    Breadcrumb,
     Hamburger, MessageDrawer
   },
   data() {
@@ -216,12 +217,14 @@ export default {
 </script>
 
 <style lang="scss">
+.boxShadow{
+ box-shadow: 0 1px 4px rgba(0,21,41,.05);
+}
 .navbarCom {
   height: 56px;
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -232,7 +235,6 @@ export default {
     cursor: pointer;
     transition: background .3s;
     -webkit-tap-highlight-color:transparent;
-
     &:hover {
       background: rgba(0, 0, 0, .025)
     }
