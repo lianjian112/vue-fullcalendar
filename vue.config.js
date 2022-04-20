@@ -1,6 +1,8 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+const IP = require('./build/getIp')
+// const NyanProgressPlugin = require('nyan-progress-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -14,6 +16,7 @@ const name = defaultSettings.title || 'vue Admin Template' // page title
 // You can change the port by the following methods:
 // port = 9528 npm run dev OR npm run dev --port = 9528
 const port = process.env.port || process.env.npm_config_port || 9528 // dev port
+const host = process.env.HOST || process.env.npm_config_host || IP
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -27,16 +30,36 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development',
+  lintOnSave: true,
   productionSourceMap: false,
+  // devServer: {
+  //   port: port,
+  //   open: true,
+  //   overlay: {
+  //     warnings: false,
+  //     errors: true
+  //   },
+  //   before: require('./mock/mock-server.js')
+  // },
   devServer: {
+    hot: true,
+    public: host + ':' + port,
     port: port,
     open: true,
     overlay: {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // proxy: process.env.VUE_APP_BASE_API
+    // {
+    //   '/api': {
+    //     target: process.env.VUE_APP_BASE_API,
+    //     pathRewrite: {
+    //       '^/api': ''
+    //     }
+    //   }
+    // },
+    // progress: false,
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
