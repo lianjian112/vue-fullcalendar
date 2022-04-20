@@ -3,16 +3,16 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="">
+          <img src="../../assets/login_img/logo@2x.png" alt="" />
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
         </div>
       </el-col>
       <el-col :span="12" class="containerRight">
         <el-form
-          ref="loginForm"
-          :model="loginForm"
+          ref="resetForm"
+          :model="resetForm"
           :rules="loginRules"
           class="login-form"
           auto-complete="on"
@@ -30,8 +30,8 @@
 
             <el-input
               ref="phone"
-              v-model="loginForm.phone"
-              placeholder="phone"
+              v-model="resetForm.phone"
+              placeholder="请输入手机号"
               name="phone"
               type="text"
               tabindex="1"
@@ -40,15 +40,15 @@
           </el-form-item>
 
           <div class="titleList">验证码</div>
-          <el-form-item prop="username">
+          <el-form-item prop="verificationCode">
             <span class="svg-container">
               <svg-icon icon-class="user" />
             </span>
             <el-input
-              ref="username"
-              v-model="loginForm.username"
-              placeholder="Username"
-              name="username"
+              ref="verificationCode"
+              v-model="resetForm.verificationCode"
+              placeholder="请输入验证码"
+              name="verificationCode"
               type="text"
               tabindex="1"
               auto-complete="on"
@@ -69,9 +69,9 @@
             <el-input
               :key="passwordType"
               ref="password"
-              v-model="loginForm.password"
+              v-model="resetForm.password"
               :type="passwordType"
-              placeholder="Password"
+              placeholder="请输入新密码"
               name="password"
               tabindex="2"
               auto-complete="on"
@@ -86,17 +86,17 @@
           <div class="tips">密码至少6位，且必须数字、字母、符号2种组合</div>
 
           <div class="titleList">确认密码</div>
-          <el-form-item prop="password">
+          <el-form-item prop="verifyPassword">
             <span class="svg-container">
               <svg-icon icon-class="password" />
             </span>
             <el-input
               :key="passwordType"
-              ref="password"
-              v-model="loginForm.password"
+              ref="verifyPassword"
+              v-model="resetForm.verifyPassword"
               :type="passwordType"
-              placeholder="Password"
-              name="password"
+              placeholder="请确认新密码"
+              name="verifyPassword"
               tabindex="2"
               auto-complete="on"
               @keyup.enter.native="handleLogin"
@@ -117,8 +117,9 @@
               height: 62px;
               font-size: 18px;
             "
-            @click.native.prevent="handleLogin"
-          >提 交</el-button>
+            @click.native.prevent="handleSubmit"
+            >提 交</el-button
+          >
         </el-form>
       </el-col>
     </el-row>
@@ -131,113 +132,133 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { rePassword } from "@/api/Login&reset&register/resetPassword.js";
 
 export default {
-  name: 'ResetPassword',
+  name: "ResetPassword",
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('请输入诊所机构码'))
+    const validateVerificationCode = (rule, value, callback) => {
+      if (value.length < 1) {
+        callback(new Error("请输入验证码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePhone = (rule, value, callback) => {
       if (value.length < 11) {
-        callback(new Error('请输入11位手机号'))
+        callback(new Error("请输入11位手机号"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('请输入密码'))
+      if (value.length < 1) {
+        callback(new Error("请输入密码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
+    const validatePassword2 = (rule, value, callback) => {
+      if (value.length < 1) {
+        callback(new Error("请输入密码"));
+      } else if (this.resetForm.password != this.resetForm.verifyPassword) {
+        console.log(1);
+        callback(new Error("请确认两次密码输入一致"));
+      } else {
+        callback();
+      }
+    };
     return {
-      loginForm: {
-        username: 'admin',
-        password: '111111',
-        phone: '13888888888'
+      resetForm: {
+        verificationCode: "",
+        password: "",
+        verifyPassword: "",
+        phone: "",
       },
       loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+        verificationCode: [
+          {
+            required: true,
+            trigger: "blur",
+            validator: validateVerificationCode,
+          },
         ],
-        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
+        phone: [{ required: true, trigger: "blur", validator: validatePhone }],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+          { required: true, trigger: "blur", validator: validatePassword },
+        ],
+        verifyPassword: [
+          { required: true, trigger: "blur", validator: validatePassword2 },
+        ],
       },
       loading: false,
-      passwordType: 'password',
+      passwordType: "password",
       redirect: undefined,
       // 验证码按钮
       flag: false, // 按钮是否可取
-      content: '获取验证码', // 按钮内文本
-      totalTime: 60 // 倒计时时间
-    }
+      content: "获取验证码", // 按钮内文本
+      totalTime: 60, // 倒计时时间
+    };
   },
   watch: {
     $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect;
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {},
   methods: {
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
-    handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
+    handleSubmit() {
+      this.$refs.resetForm.validate((valid) => {
         if (valid) {
-          this.loading = true
-          this.$store
-            .dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+          this.loading = true;
+          const data = this.resetForm;
+          rePassword(data).then((res) => {
+            console.log(res);
+            // if (res.code === 0) {
+            //   this.tableData = res.data.result;
+            //   this.total = res.data.total;
+            // } else {
+            //   this.$message.error(res.msg);
+            // }
+          });
+        } 
+        // else {
+        //   console.log("error submit!!");
+        //   return false;
+        // }
+      });
     },
 
     // 点击按钮倒计时
     getCaptcha() {
-      this.flag = true // 点击之后设置按钮不可取
-      this.content = this.totalTime + 's后重新发送' // 按钮内文本
+      this.flag = true; // 点击之后设置按钮不可取
+      this.content = this.totalTime + "s后重新发送"; // 按钮内文本
       const clock = window.setInterval(() => {
-        this.totalTime--
-        this.content = this.totalTime + 's后重新发送'
+        this.totalTime--;
+        this.content = this.totalTime + "s后重新发送";
         if (this.totalTime < 0) {
-          window.clearInterval(clock)
-          this.content = '重新发送验证码'
-          this.totalTime = 60
-          this.flag = false // 这里重新开启
+          window.clearInterval(clock);
+          this.content = "重新发送验证码";
+          this.totalTime = 60;
+          this.flag = false; // 这里重新开启
         }
-      }, 1000)
-    }
-  }
-}
+      }, 1000);
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -408,7 +429,7 @@ $light_gray: #eee;
       font-size: 14px;
       color: #8a94a6;
       position: relative;
-      top: -20px;
+      top: -8px;
     }
   }
   .footer {
