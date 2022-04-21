@@ -135,7 +135,7 @@
 import {
   rePassword,
   rePwdCode,
-} from "@/api/Login&reset&register/resetPassword.js";
+} from "@/api/Login&reset&register/api.js";
 
 export default {
   name: "ResetPassword",
@@ -227,7 +227,11 @@ export default {
       this.$refs.resetForm.validate((valid) => {
         if (valid) {
           // this.loading = true;
-          const data = this.resetForm;
+          const data = {
+            account: this.resetForm.phone,
+            verificationCode: this.resetForm.verificationCode,
+            password: this.resetForm.password,
+          };
           rePassword(data).then((res) => {
             console.log(res);
             // this.loading = false;
@@ -238,8 +242,7 @@ export default {
             //   this.$message.error(res.msg);
             // }
           });
-        }
-        else {
+        } else {
           console.log("error submit!!");
           return false;
         }
@@ -247,42 +250,29 @@ export default {
     },
 
     // 点击按钮倒计时
+    // 获取验证码
     getCaptcha() {
-      this.flag = true; // 点击之后设置按钮不可取
-      this.content = this.totalTime + "s后重新发送"; // 按钮内文本
-      const clock = window.setInterval(() => {
-        this.totalTime--;
-        this.content = this.totalTime + "s后重新发送";
-        if (this.totalTime < 0) {
-          window.clearInterval(clock);
-          this.content = "重新发送验证码";
-          this.totalTime = 60;
-          this.flag = false; // 这里重新开启
-        }
-      }, 1000);
       const data = this.resetForm.phone;
       rePwdCode({ account: data }).then((res) => {
         if (res.code === 200) {
+          this.flag = true; // 点击之后设置按钮不可取
+          this.content = this.totalTime + "s后重新发送"; // 按钮内文本
+          const clock = window.setInterval(() => {
+            this.totalTime--;
+            this.content = this.totalTime + "s后重新发送";
+            if (this.totalTime < 0) {
+              window.clearInterval(clock);
+              this.content = "重新发送验证码";
+              this.totalTime = 60;
+              this.flag = false; // 这里重新开启
+            }
+          }, 1000);
           console.log(res);
         } else {
           this.$message.error(res.msg);
         }
       });
     },
-
-    //获取验证码
-    // getPWD() {
-    //   const data = this.resetForm.phone;
-    //   rePwdCode(data).then((res) => {
-    //     console.log(res);
-    //     // if (res.code === 0) {
-    //     //   this.tableData = res.data.result;
-    //     //   this.total = res.data.total;
-    //     // } else {
-    //     //   this.$message.error(res.msg);
-    //     // }
-    //   });
-    // },
   },
 };
 </script>

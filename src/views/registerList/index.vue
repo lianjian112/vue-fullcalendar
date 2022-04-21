@@ -3,15 +3,15 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="">
+          <img src="../../assets/login_img/logo@2x.png" alt="" />
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
           <div class="explain">
             <h3>申请说明</h3>
             <p>
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
-              <br>
+              <br />
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
             </p>
           </div>
@@ -19,10 +19,10 @@
       </el-col>
       <el-col :span="12" class="containerRight">
         <el-form
-          ref="loginForm"
-          :model="loginForm"
+          ref="registerListForm"
+          :model="registerListForm"
           :rules="loginRules"
-          class="login-form"
+          class="registerListForm"
           auto-complete="on"
           label-position="left"
         >
@@ -31,15 +31,15 @@
           </div>
 
           <div class="titleList">诊所名称</div>
-          <el-form-item prop="username">
+          <el-form-item prop="clinicName">
             <span class="svg-container">
               <svg-icon icon-class="user" />
             </span>
             <el-input
-              ref="username"
-              v-model="loginForm.username"
+              ref="clinicName"
+              v-model="registerListForm.clinicName"
               placeholder="请输入诊所名称"
-              name="username"
+              name="clinicName"
               type="text"
               tabindex="1"
               auto-complete="on"
@@ -57,13 +57,13 @@
           ></el-cascader>
 
           <div class="titleList">详细地址</div>
-          <el-form-item prop="username" style="height: 100px">
+          <el-form-item prop="address" style="height: 100px">
             <span class="svg-container"> </span>
             <el-input
-              ref="username"
-              v-model="loginForm.username"
+              ref="address"
+              v-model="registerListForm.address"
               placeholder="请输入地址"
-              name="username"
+              name="address"
               type="text"
               tabindex="1"
               auto-complete="on"
@@ -71,15 +71,15 @@
             />
           </el-form-item>
           <div class="titleList">诊所联系人</div>
-          <el-form-item prop="username">
+          <el-form-item prop="contactName">
             <span class="svg-container">
               <svg-icon icon-class="user" />
             </span>
             <el-input
-              ref="username"
-              v-model="loginForm.username"
+              ref="contactName"
+              v-model="registerListForm.contactName"
               placeholder="请输入联系人"
-              name="username"
+              name="contactName"
               type="text"
               tabindex="1"
               auto-complete="on"
@@ -102,7 +102,7 @@
                 class="el-upload-list__item-thumbnail"
                 :src="file.url"
                 alt=""
-              >
+              />
               <span class="el-upload-list__item-actions">
                 <span
                   class="el-upload-list__item-preview"
@@ -121,7 +121,7 @@
             </div>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="">
+            <img width="100%" :src="dialogImageUrl" alt="" />
           </el-dialog>
           <el-upload
             ref="uploadSuccess2"
@@ -143,7 +143,7 @@
                 class="el-upload-list__item-thumbnail"
                 :src="file.url"
                 alt=""
-              >
+              />
               <span class="el-upload-list__item-actions">
                 <span
                   class="el-upload-list__item-preview"
@@ -162,26 +162,27 @@
             </div>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="">
+            <img width="100%" :src="dialogImageUrl" alt="" />
           </el-dialog>
 
-          <el-checkbox
-            v-model="checked"
-            class="checkBox"
-          >已阅读并接受《用户服务条款》及《隐私协议》</el-checkbox>
+          <el-checkbox v-model="checked" class="checkBox"
+            >已阅读并接受《用户服务条款》及《隐私协议》</el-checkbox
+          >
           <div class="floatBtn">
             <el-button
               :loading="loading"
               plain
               class="footerBtn"
               @click.native.prevent="last"
-            >上一步</el-button>
+              >上一步</el-button
+            >
             <el-button
               :loading="loading"
               type="primary"
               class="footerBtn"
               @click.native.prevent="submit"
-            >提 交</el-button>
+              >提 交</el-button
+            >
           </div>
         </el-form>
       </el-col>
@@ -195,112 +196,177 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import { regionData } from 'element-china-area-data'
+import { toFormData } from "./toFormData.js";
+import { regionData } from "element-china-area-data";
+import { addClinic } from "@/api/Login&reset&register/api.js";
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('请输入诊所机构码'))
+      if (value.length < 1) {
+        callback(new Error("请输入诊所名称"));
       } else {
-        callback()
+        callback();
       }
-    }
-    const validatePhone = (rule, value, callback) => {
-      if (value.length < 11) {
-        callback(new Error('请输入11位手机号'))
+    };
+    const validateName = (rule, value, callback) => {
+      if (value.length < 1) {
+        callback(new Error("请输入诊所联系人"));
       } else {
-        callback()
+        callback();
       }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('请输入密码'))
+    };
+    const validateAddress = (rule, value, callback) => {
+      if (value.length < 1) {
+        callback(new Error("请输入详细地址"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
-      loginForm: {
-        username: 'admin',
-        password: '111111',
-        phone: '13888888888'
+      registerListForm: {
+        clinicName: "",
+        contactName: "",
+        address: "",
       },
       loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+        clinicName: [
+          { required: true, trigger: "blur", validator: validateUsername },
         ],
-        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
-        password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+        address: [
+          { required: true, trigger: "blur", validator: validateAddress },
+        ],
+        contactName: [
+          { required: true, trigger: "blur", validator: validateName },
+        ],
       },
       loading: false,
-      passwordType: 'password',
+      passwordType: "password",
       redirect: undefined,
       checked: false,
       options: regionData,
       location: [],
-      dialogImageUrl: '',
+      dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
-      imgFile: []
-    }
+      imgFile: [],
+      imgFile2: [],
+      lastPhone: "",
+    };
   },
   watch: {
     location() {
-      console.log(this.location)
-    }
-  },
-  created() {},
-  methods: {
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+      console.log(this.location);
     },
+  },
+  created() {
+    this.lastPhone = this.$route.query.phone;
+  },
+  methods: {
     handleRemove(file) {
-      this.$refs.uploadSuccess.clearFiles()
-      this.$refs.uploadSuccess.$el.children[1].style.display = 'block'
+      this.$refs.uploadSuccess.clearFiles();
+      this.$refs.uploadSuccess.$el.children[1].style.display = "block";
     },
     handleRemove2(file) {
-      this.$refs.uploadSuccess2.clearFiles()
-      this.$refs.uploadSuccess2.$el.children[1].style.display = 'block'
+      this.$refs.uploadSuccess2.clearFiles();
+      this.$refs.uploadSuccess2.$el.children[1].style.display = "block";
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
-    // 上传成功
+    // 营业执照上传成功
     success(response, file, fileList) {
-      console.log(response)
-      console.log(file)
-      this.imgFile = file
-      console.log(fileList)
-      this.$refs.uploadSuccess.$el.children[1].style.display = 'none'
+      console.log(response);
+      console.log(file);
+      this.imgFile = file;
+      console.log(fileList);
+      this.$refs.uploadSuccess.$el.children[1].style.display = "none";
     },
+
+    // 许可证上传成功
     success2(response, file, fileList) {
-      console.log(response)
-      console.log(file)
-      console.log(fileList)
-      this.$refs.uploadSuccess2.$el.children[1].style.display = 'none'
+      console.log(response);
+      this.imgFile2 = file;
+      console.log(file);
+      console.log(fileList);
+      this.$refs.uploadSuccess2.$el.children[1].style.display = "none";
     },
     last() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     submit() {
-      this.$router.push()
-    }
-  }
-}
+      const data = {
+        contactMobile: this.lastPhone,
+        clinicName: this.registerListForm.clinicName,
+        province: this.location[0],
+        city: this.location[1],
+        area: this.location[2],
+        address: this.registerListForm.address,
+        contactName: this.registerListForm.contactName,
+        clinicLicense: this.imgFile[0].raw || "",
+        clinicPermit: this.imgFile2[0].raw || "",
+      };
+      toFormData(data);
+      addClinic(toFormData(data)).then((res) => {
+        if (res.code === 200) {
+          console.log(res);
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
+      // this.$router.push();
+    },
+  },
+};
 </script>
 
+<style lang="scss">
+/* 修复input 背景不协调 和光标变色 */
+/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
+
+$bg: #eaf0f7;
+$light_gray: rgb(255, 255, 255);
+$cursor: rgb(39, 37, 37);
+
+@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+  .login-container .el-input input {
+    color: $cursor;
+  }
+}
+
+/* reset element-ui css */
+.login-container {
+  .el-input {
+    display: inline-block;
+    height: 47px;
+    width: 85%;
+
+    input {
+      background: transparent;
+      border: 0px;
+      -webkit-appearance: none;
+      border-radius: 0px;
+      padding: 12px 5px 12px 15px;
+      color: $light_gray;
+      height: 47px;
+      caret-color: $cursor;
+
+      &:-webkit-autofill {
+        box-shadow: 0 0 0px 1000px $bg inset !important;
+        -webkit-text-fill-color: $cursor !important;
+      }
+    }
+  }
+
+  .el-form-item {
+    border: 1px solid rgba(255, 255, 255, 0.908);
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    color: #454545;
+  }
+}
+</style>
 <style lang="scss">
 /* reset element-ui css */
 .containerRight {
@@ -364,8 +430,8 @@ $light_gray: #eee;
     }
     .explain {
       position: absolute;
-      top: 34%;
-      left: 190px;
+      top: 35%;
+      left: 210px;
       width: 257px;
       h3 {
         font-size: 16px;
@@ -381,7 +447,7 @@ $light_gray: #eee;
     }
   }
   .containerRight {
-    .login-form {
+    .registerListForm {
       position: relative;
       width: 520px;
       max-width: 100%;

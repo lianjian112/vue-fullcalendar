@@ -3,15 +3,15 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="">
+          <img src="../../assets/login_img/logo@2x.png" alt="" />
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
           <div class="explain">
             <h3>申请说明</h3>
             <p>
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
-              <br>
+              <br />
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
             </p>
           </div>
@@ -19,10 +19,10 @@
       </el-col>
       <el-col :span="12" class="containerRight">
         <el-form
-          ref="loginForm"
-          :model="loginForm"
-          :rules="loginRules"
-          class="login-form"
+          ref="registerForm"
+          :model="registerForm"
+          :rules="registerRules"
+          class="registerForm"
           auto-complete="on"
           label-position="left"
         >
@@ -38,8 +38,8 @@
 
             <el-input
               ref="phone"
-              v-model="loginForm.phone"
-              placeholder="phone"
+              v-model="registerForm.phone"
+              placeholder="请输入手机号"
               name="phone"
               type="text"
               tabindex="1"
@@ -51,15 +51,15 @@
           </div>
 
           <div class="titleList">验证码</div>
-          <el-form-item prop="username">
+          <el-form-item prop="verificationCode">
             <span class="svg-container">
               <svg-icon icon-class="user" />
             </span>
             <el-input
-              ref="username"
-              v-model="loginForm.username"
-              placeholder="Username"
-              name="username"
+              ref="verificationCode"
+              v-model="registerForm.verificationCode"
+              placeholder="请输入验证码"
+              name="verificationCode"
               type="text"
               tabindex="1"
               auto-complete="on"
@@ -84,7 +84,8 @@
               font-size: 18px;
             "
             @click.native.prevent="next"
-          >下一步</el-button>
+            >下一步</el-button
+          >
 
           <div class="tips">
             <span class="span1">已有账号？</span>
@@ -102,104 +103,164 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import {
+  getSmsRegisterCode,
+  checkMobile,
+} from "@/api/Login&reset&register/api.js";
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('请输入诊所机构码'))
+      if (value.length < 1) {
+        callback(new Error("请输入验证码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePhone = (rule, value, callback) => {
       if (value.length < 11) {
-        callback(new Error('请输入11位手机号'))
+        callback(new Error("请输入11位手机号"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('请输入密码'))
+      if (value.length < 1) {
+        callback(new Error("请输入密码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
-      loginForm: {
-        username: 'admin',
-        password: '111111',
-        phone: '13888888888'
+      registerForm: {
+        verificationCode: "",
+        password: "",
+        phone: "",
       },
-      loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+      registerRules: {
+        verificationCode: [
+          { required: true, trigger: "blur", validator: validateUsername },
         ],
-        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
+        phone: [{ required: true, trigger: "blur", validator: validatePhone }],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+          { required: true, trigger: "blur", validator: validatePassword },
+        ],
       },
       loading: false,
-      passwordType: 'password',
+      passwordType: "password",
       redirect: undefined,
       checked: false,
       disabled: true,
       // 验证码按钮
       flag: false, // 按钮是否可取
-      content: '获取验证码', // 按钮内文本
-      totalTime: 60 // 倒计时时间
-    }
+      content: "获取验证码", // 按钮内文本
+      totalTime: 60, // 倒计时时间
+    };
   },
   watch: {
-    'loginForm.username'() {
-      if (this.loginForm.username.length === 6) {
-        this.disabled = false
-      } else {
-        this.disabled = true
+    "registerForm.verificationCode"(newval, oldval) {
+      if (newval.length === 6) {
+        this.disabled = false;
       }
-    }
+    },
   },
   methods: {
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
-    },
     next() {
-      this.$router.push({ path: '/registerList', query: '' })
+      console.log(this.registerForm);
+      const data = {
+        contactMobile: this.registerForm.phone,
+        registerVerificationCode: this.registerForm.verificationCode,
+      };
+      checkMobile(data).then((res) => {
+        console.log(res);
+        if (res.code === 200) {
+          this.$router.push({
+            path: "/registerList",
+            query: {phone:this.registerForm.phone},
+          });
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
     },
     // 返回登录
     returnLogin() {
-      this.$router.push({ path: '/login', query: '' })
+      this.$router.push({ path: "/login", query: "" });
     },
     // 点击按钮倒计时
     getCaptcha() {
-      this.flag = true // 点击之后设置按钮不可取
-      this.content = this.totalTime + 's后重新发送' // 按钮内文本
-      const clock = window.setInterval(() => {
-        this.totalTime--
-        this.content = this.totalTime + 's后重新发送'
-        if (this.totalTime < 0) {
-          window.clearInterval(clock)
-          this.content = '重新发送验证码'
-          this.totalTime = 60
-          this.flag = false // 这里重新开启
+      const data = this.registerForm.phone;
+      getSmsRegisterCode({ contactMobile: data }).then((res) => {
+        if (res.code === 200) {
+          this.flag = true; // 点击之后设置按钮不可取
+          this.content = this.totalTime + "s后重新发送"; // 按钮内文本
+          const clock = window.setInterval(() => {
+            this.totalTime--;
+            this.content = this.totalTime + "s后重新发送";
+            if (this.totalTime < 0) {
+              window.clearInterval(clock);
+              this.content = "重新发送验证码";
+              this.totalTime = 60;
+              this.flag = false; // 这里重新开启
+            }
+          }, 1000);
+          console.log(res);
+        } else {
+          this.$message.error(res.msg);
         }
-      }, 1000)
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
+<style lang="scss">
+/* 修复input 背景不协调 和光标变色 */
+/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
+
+$bg: #eaf0f7;
+$light_gray: rgb(255, 255, 255);
+$cursor: rgb(39, 37, 37);
+
+@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+  .login-container .el-input input {
+    color: $cursor;
+  }
+}
+
+/* reset element-ui css */
+.login-container {
+  .el-input {
+    display: inline-block;
+    height: 47px;
+    width: 85%;
+
+    input {
+      background: transparent;
+      border: 0px;
+      -webkit-appearance: none;
+      border-radius: 0px;
+      padding: 12px 5px 12px 15px;
+      color: $light_gray;
+      height: 47px;
+      caret-color: $cursor;
+
+      &:-webkit-autofill {
+        box-shadow: 0 0 0px 1000px $bg inset !important;
+        -webkit-text-fill-color: $cursor !important;
+      }
+    }
+  }
+
+  .el-form-item {
+    border: 1px solid rgba(255, 255, 255, 0.908);
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    color: #454545;
+  }
+}
+</style>
 <style lang="scss">
 /* reset element-ui css */
 .containerRight {
@@ -249,8 +310,8 @@ $light_gray: #eee;
     }
     .explain {
       position: absolute;
-      top: 45%;
-      left: 190px;
+      top: 46%;
+      left: 210px;
       width: 257px;
       h3 {
         font-size: 16px;
@@ -266,7 +327,7 @@ $light_gray: #eee;
     }
   }
   .containerRight {
-    .login-form {
+    .registerForm {
       position: relative;
       width: 520px;
       max-width: 100%;
@@ -341,7 +402,7 @@ $light_gray: #eee;
       font-size: 14px;
       color: #8a94a6;
       position: relative;
-      top: -20px;
+      top: -8px;
       text-align: left;
     }
   }
