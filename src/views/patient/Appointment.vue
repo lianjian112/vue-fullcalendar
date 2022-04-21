@@ -52,14 +52,38 @@ export default {
         selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
-        weekends: false,
+        weekends: true,
+        slotMinTime: '08:00',
+        slotMaxTime: '18:00',
+        slotDuration: '00:15',
+        allDaySlot: false, // 周，日视图时，all-day 不显示
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents
+        eventsSet: this.handleEvents,
+        eventMouseLeave: this.eventMouseLeave,
+        displayEventTime: true,
+        slotLabelFormat: {
+          hour: '2-digit',
+          minute: '2-digit',
+          meridiem: false,
+          hour12: false // 设置时间为24小时
+        },
+        views: {
+          timeGridFourDay: {
+            type: 'timeGrid',
+            duration: { days: 4 }
+          }
+        },
+        eventRemove: this.eventRemove
+        // eventLimitNum: { // 事件显示数量限制
+        //   timeGrid: {
+        //     eventLimit: 6// adjust to 6 only for timeGridWeek/timeGridDay
+        //   }
+        // }
         /* you can update a remote database when these fire:
         eventAdd:
         eventChange:
-        eventRemove:
+        eventRemove:this.eventRemove
         */
       },
       currentEvents: []
@@ -67,32 +91,51 @@ export default {
   },
   mounted() {},
   methods: {
-    handleDateSelect(selectInfo) {
-      const title = prompt('Please enter a new title for your event')
-      const calendarApi = selectInfo.view.calendar
-
-      calendarApi.unselect() // clear date selection
-
-      if (title) {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay
-        })
-      }
+    getweekday(date) {
+      var weekArray = new Array(['日', '一', '二', '三', '四', '五', '六'])
+      var week = weekArray[new Date(date).getDay()]// 注意此处必须是先new一个Date
+      return week
     },
 
+    handleDateSelect(selectInfo) {
+      const weekArray = ['日', '一', '二', '三', '四', '五', '六']
+      const title = weekArray[new Date(selectInfo.start).getDay()]
+      const calendarApi = selectInfo.view.calendar
+      // 实现单选
+      const list = calendarApi.getEvents()
+      list.map((item) => item.remove())
+      calendarApi.unselect() // clear date selection
+      calendarApi.addEvent({
+        id: createEventId(),
+        title: '周' + title,
+        start: selectInfo.startStr,
+        end: selectInfo.endStr,
+        allDay: selectInfo.allDay
+      })
+      // }
+    },
+
+    // 点击当前预约信息 删除
     handleEventClick(clickInfo) {
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+      this.$confirm('此操作将删除该条预约信息, 是否继续?', '提示', {
+        type: 'warning'
+      }).then(() => {
         clickInfo.event.remove()
-      }
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      })
     },
 
     handleEvents(events) {
       this.currentEvents = events
+    },
+
+    eventRemove(events) {
+      console.log('events', events)
     }
+
   }
 }
 </script>
