@@ -3,15 +3,15 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="" />
+          <img src="../../assets/login_img/logo@2x.png" alt="">
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
           <div class="explain">
             <h3>申请说明</h3>
             <p>
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
-              <br />
+              <br>
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
             </p>
           </div>
@@ -84,8 +84,7 @@
               font-size: 18px;
             "
             @click.native.prevent="next"
-            >下一步</el-button
-          >
+          >下一步</el-button>
 
           <div class="tips">
             <span class="span1">已有账号？</span>
@@ -105,114 +104,114 @@
 <script>
 import {
   getSmsRegisterCode,
-  checkMobile,
-} from "@/api/Login&reset&register/api.js";
+  checkMobile
+} from '@/api/Login&reset&register/api.js'
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error("请输入验证码"));
+        callback(new Error('请输入验证码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePhone = (rule, value, callback) => {
       if (value.length < 11) {
-        callback(new Error("请输入11位手机号"));
+        callback(new Error('请输入11位手机号'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error("请输入密码"));
+        callback(new Error('请输入密码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       registerForm: {
-        verificationCode: "",
-        password: "",
-        phone: "",
+        verificationCode: '',
+        password: '',
+        phone: ''
       },
       registerRules: {
         verificationCode: [
-          { required: true, trigger: "blur", validator: validateUsername },
+          { required: true, trigger: 'blur', validator: validateUsername }
         ],
-        phone: [{ required: true, trigger: "blur", validator: validatePhone }],
+        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword },
-        ],
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       loading: false,
-      passwordType: "password",
+      passwordType: 'password',
       redirect: undefined,
       checked: false,
       disabled: true,
       // 验证码按钮
       flag: false, // 按钮是否可取
-      content: "获取验证码", // 按钮内文本
-      totalTime: 60, // 倒计时时间
-    };
+      content: '获取验证码', // 按钮内文本
+      totalTime: 60 // 倒计时时间
+    }
   },
   watch: {
-    "registerForm.verificationCode"(newval, oldval) {
+    'registerForm.verificationCode'(newval, oldval) {
       if (newval.length === 6) {
-        this.disabled = false;
+        this.disabled = false
       }
-    },
+    }
   },
   methods: {
     next() {
-      console.log(this.registerForm);
+      console.log(this.registerForm)
       const data = {
         contactMobile: this.registerForm.phone,
-        registerVerificationCode: this.registerForm.verificationCode,
-      };
+        registerVerificationCode: this.registerForm.verificationCode
+      }
       checkMobile(data).then((res) => {
-        console.log(res);
+        console.log(res)
         if (res.code === 200) {
           this.$router.push({
-            path: "/registerList",
-            query: {phone:this.registerForm.phone},
-          });
+            path: '/registerList',
+            query: { phone: this.registerForm.phone }
+          })
         } else {
-          this.$message.error(res.msg);
+          this.$message.error(res.msg)
         }
-      });
+      })
     },
     // 返回登录
     returnLogin() {
-      this.$router.push({ path: "/login", query: "" });
+      this.$router.push({ path: '/login', query: '' })
     },
     // 点击按钮倒计时
     getCaptcha() {
-      const data = this.registerForm.phone;
+      const data = this.registerForm.phone
       getSmsRegisterCode({ contactMobile: data }).then((res) => {
         if (res.code === 200) {
-          this.flag = true; // 点击之后设置按钮不可取
-          this.content = this.totalTime + "s后重新发送"; // 按钮内文本
+          this.flag = true // 点击之后设置按钮不可取
+          this.content = this.totalTime + 's后重新发送' // 按钮内文本
           const clock = window.setInterval(() => {
-            this.totalTime--;
-            this.content = this.totalTime + "s后重新发送";
+            this.totalTime--
+            this.content = this.totalTime + 's后重新发送'
             if (this.totalTime < 0) {
-              window.clearInterval(clock);
-              this.content = "重新发送验证码";
-              this.totalTime = 60;
-              this.flag = false; // 这里重新开启
+              window.clearInterval(clock)
+              this.content = '重新发送验证码'
+              this.totalTime = 60
+              this.flag = false // 这里重新开启
             }
-          }, 1000);
-          console.log(res);
+          }, 1000)
+          console.log(res)
         } else {
-          this.$message.error(res.msg);
+          this.$message.error(res.msg)
         }
-      });
-    },
-  },
-};
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss">

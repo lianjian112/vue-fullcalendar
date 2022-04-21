@@ -42,10 +42,10 @@ const actions = {
   login({
     commit
   }, userInfo) {
-    console.log(userInfo);
+    console.log(userInfo)
     return new Promise((resolve, reject) => {
       login(userInfo).then(res => {
-        console.log(res);
+        console.log(res)
         // const {
         //   data
         // } = res
@@ -56,7 +56,7 @@ const actions = {
         reject(error)
       })
     })
-  },
+  }
 
   // get user info
   // getInfo({

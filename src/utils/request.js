@@ -56,7 +56,7 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
-      // 50008:非法token; 50012:其他客户端登录; 50014:令牌过期;  
+      // 50008:非法token; 50012:其他客户端登录; 50014:令牌过期;
       if (res.code === 5000) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {

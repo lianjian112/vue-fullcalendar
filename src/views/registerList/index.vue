@@ -3,15 +3,15 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="" />
+          <img src="../../assets/login_img/logo@2x.png" alt="">
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
           <div class="explain">
             <h3>申请说明</h3>
             <p>
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
-              <br />
+              <br>
               定制网站就是指针对企业进行重新策划、方案书写、重新设计、重新功能开发的网站制作，也就是根据企业的产品特点、宣传推广而来量身定做网站。它跟传统的模板建站就完全不一样，定制网站完全是全新打造的，不会跟其他网站重复。
             </p>
           </div>
@@ -102,7 +102,7 @@
                 class="el-upload-list__item-thumbnail"
                 :src="file.url"
                 alt=""
-              />
+              >
               <span class="el-upload-list__item-actions">
                 <span
                   class="el-upload-list__item-preview"
@@ -121,7 +121,7 @@
             </div>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
+            <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
           <el-upload
             ref="uploadSuccess2"
@@ -143,7 +143,7 @@
                 class="el-upload-list__item-thumbnail"
                 :src="file.url"
                 alt=""
-              />
+              >
               <span class="el-upload-list__item-actions">
                 <span
                   class="el-upload-list__item-preview"
@@ -162,27 +162,26 @@
             </div>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
+            <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
 
-          <el-checkbox v-model="checked" class="checkBox"
-            >已阅读并接受《用户服务条款》及《隐私协议》</el-checkbox
-          >
+          <el-checkbox
+            v-model="checked"
+            class="checkBox"
+          >已阅读并接受《用户服务条款》及《隐私协议》</el-checkbox>
           <div class="floatBtn">
             <el-button
               :loading="loading"
               plain
               class="footerBtn"
               @click.native.prevent="last"
-              >上一步</el-button
-            >
+            >上一步</el-button>
             <el-button
               :loading="loading"
               type="primary"
               class="footerBtn"
               @click.native.prevent="submit"
-              >提 交</el-button
-            >
+            >提 交</el-button>
           </div>
         </el-form>
       </el-col>
@@ -196,104 +195,104 @@
 </template>
 
 <script>
-import { toFormData } from "./toFormData.js";
-import { regionData } from "element-china-area-data";
-import { addClinic } from "@/api/Login&reset&register/api.js";
+import { toFormData } from './toFormData.js'
+import { regionData } from 'element-china-area-data'
+import { addClinic } from '@/api/Login&reset&register/api.js'
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error("请输入诊所名称"));
+        callback(new Error('请输入诊所名称'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validateName = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error("请输入诊所联系人"));
+        callback(new Error('请输入诊所联系人'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validateAddress = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error("请输入详细地址"));
+        callback(new Error('请输入详细地址'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       registerListForm: {
-        clinicName: "",
-        contactName: "",
-        address: "",
+        clinicName: '',
+        contactName: '',
+        address: ''
       },
       loginRules: {
         clinicName: [
-          { required: true, trigger: "blur", validator: validateUsername },
+          { required: true, trigger: 'blur', validator: validateUsername }
         ],
         address: [
-          { required: true, trigger: "blur", validator: validateAddress },
+          { required: true, trigger: 'blur', validator: validateAddress }
         ],
         contactName: [
-          { required: true, trigger: "blur", validator: validateName },
-        ],
+          { required: true, trigger: 'blur', validator: validateName }
+        ]
       },
       loading: false,
-      passwordType: "password",
+      passwordType: 'password',
       redirect: undefined,
       checked: false,
       options: regionData,
       location: [],
-      dialogImageUrl: "",
+      dialogImageUrl: '',
       dialogVisible: false,
       disabled: false,
       imgFile: [],
       imgFile2: [],
-      lastPhone: "",
-    };
+      lastPhone: ''
+    }
   },
   watch: {
     location() {
-      console.log(this.location);
-    },
+      console.log(this.location)
+    }
   },
   created() {
-    this.lastPhone = this.$route.query.phone;
+    this.lastPhone = this.$route.query.phone
   },
   methods: {
     handleRemove(file) {
-      this.$refs.uploadSuccess.clearFiles();
-      this.$refs.uploadSuccess.$el.children[1].style.display = "block";
+      this.$refs.uploadSuccess.clearFiles()
+      this.$refs.uploadSuccess.$el.children[1].style.display = 'block'
     },
     handleRemove2(file) {
-      this.$refs.uploadSuccess2.clearFiles();
-      this.$refs.uploadSuccess2.$el.children[1].style.display = "block";
+      this.$refs.uploadSuccess2.clearFiles()
+      this.$refs.uploadSuccess2.$el.children[1].style.display = 'block'
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
     },
     // 营业执照上传成功
     success(response, file, fileList) {
-      console.log(response);
-      console.log(file);
-      this.imgFile = file;
-      console.log(fileList);
-      this.$refs.uploadSuccess.$el.children[1].style.display = "none";
+      console.log(response)
+      console.log(file)
+      this.imgFile = file
+      console.log(fileList)
+      this.$refs.uploadSuccess.$el.children[1].style.display = 'none'
     },
 
     // 许可证上传成功
     success2(response, file, fileList) {
-      console.log(response);
-      this.imgFile2 = file;
-      console.log(file);
-      console.log(fileList);
-      this.$refs.uploadSuccess2.$el.children[1].style.display = "none";
+      console.log(response)
+      this.imgFile2 = file
+      console.log(file)
+      console.log(fileList)
+      this.$refs.uploadSuccess2.$el.children[1].style.display = 'none'
     },
     last() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     submit() {
       const data = {
@@ -304,21 +303,21 @@ export default {
         area: this.location[2],
         address: this.registerListForm.address,
         contactName: this.registerListForm.contactName,
-        clinicLicense: this.imgFile[0].raw || "",
-        clinicPermit: this.imgFile2[0].raw || "",
-      };
-      toFormData(data);
+        clinicLicense: this.imgFile[0].raw || '',
+        clinicPermit: this.imgFile2[0].raw || ''
+      }
+      toFormData(data)
       addClinic(toFormData(data)).then((res) => {
         if (res.code === 200) {
-          console.log(res);
+          console.log(res)
         } else {
-          this.$message.error(res.msg);
+          this.$message.error(res.msg)
         }
-      });
+      })
       // this.$router.push();
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss">
