@@ -91,12 +91,7 @@ export default {
   },
   mounted() {},
   methods: {
-    getweekday(date) {
-      var weekArray = new Array(['日', '一', '二', '三', '四', '五', '六'])
-      var week = weekArray[new Date(date).getDay()]// 注意此处必须是先new一个Date
-      return week
-    },
-
+    // 点击选择预约时间
     handleDateSelect(selectInfo) {
       const weekArray = ['日', '一', '二', '三', '四', '五', '六']
       const title = weekArray[new Date(selectInfo.start).getDay()]
