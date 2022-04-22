@@ -1,5 +1,36 @@
 <template>
   <div class="login-container">
+    <!-- 成功提示 -->
+    <el-dialog
+      title=""
+      :visible.sync="centerDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      width="474px"
+      center
+      class="abow_dialog"
+    >
+      <span class="text">感谢您的申请</span>
+      <img src="../../assets/resetPassword/next.png" alt="" class="nextImg">
+      <div class="content">
+        <p>
+          感谢您对华光的支持！我们已收到您的注册申请，请您耐心等待，我们将会在2个工作日内以短信方式，通知到您本次的申请结果！
+        </p>
+        <p>
+          在此期间，请您多留意您的手机
+          <span class="phone">{{ lastPhone }}</span>，谢谢！
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          type="primary"
+          class="btn"
+          @click="goLogin"
+        >返回首页</el-button>
+      </span>
+    </el-dialog>
+    <!-- 成功提示 -->
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
@@ -95,7 +126,7 @@
             class="upload"
             :on-change="success"
           >
-            <span class="iconfont icon-a-zu16474 uploadIcon" />
+            <span class="iconfont icon-shangchuan uploadIcon" />
             <i slot="default" class="uploadText">营业执照</i>
             <div slot="file" slot-scope="{ file }">
               <img
@@ -133,7 +164,7 @@
             :on-change="success2"
           >
             <span
-              class="iconfont icon-a-zu16474 uploadIcon"
+              class="iconfont icon-shangchuan uploadIcon"
               style="left: 32px"
             />
             <i slot="default" class="uploadText">机构许可证</i>
@@ -166,7 +197,7 @@
           </el-dialog>
 
           <el-checkbox
-            v-model="checked"
+            v-model="registerListForm.checked"
             class="checkBox"
           >已阅读并接受《用户服务条款》及《隐私协议》</el-checkbox>
           <div class="floatBtn">
@@ -226,7 +257,8 @@ export default {
       registerListForm: {
         clinicName: '',
         contactName: '',
-        address: ''
+        address: '',
+        checked: false
       },
       loginRules: {
         clinicName: [
@@ -250,7 +282,8 @@ export default {
       disabled: false,
       imgFile: [],
       imgFile2: [],
-      lastPhone: ''
+      lastPhone: '',
+      centerDialogVisible: false
     }
   },
   watch: {
@@ -295,26 +328,51 @@ export default {
       this.$router.go(-1)
     },
     submit() {
-      const data = {
-        contactMobile: this.lastPhone,
-        clinicName: this.registerListForm.clinicName,
-        province: this.location[0],
-        city: this.location[1],
-        area: this.location[2],
-        address: this.registerListForm.address,
-        contactName: this.registerListForm.contactName,
-        clinicLicense: this.imgFile[0].raw || '',
-        clinicPermit: this.imgFile2[0].raw || ''
+      console.log(this.imgFile)
+      if (this.imgFile.length !== 0) {
+        this.imgFile = this.imgFile[0].raw
       }
-      toFormData(data)
-      addClinic(toFormData(data)).then((res) => {
-        if (res.code === 200) {
-          console.log(res)
+      if (this.imgFile2.length !== 0) {
+        this.imgFile2 = this.imgFile2[0].raw
+      }
+      this.$refs.registerListForm.validate((valid) => {
+        if (valid) {
+          const data = {
+            contactMobile: this.lastPhone,
+            clinicName: this.registerListForm.clinicName,
+            province: this.location[0],
+            city: this.location[1],
+            area: this.location[2],
+            address: this.registerListForm.address,
+            contactName: this.registerListForm.contactName,
+            clinicLicense: this.imgFile,
+            clinicPermit: this.imgFile2
+          }
+          toFormData(data)
+          if (this.registerListForm.checked === false) {
+            this.$message.error('请阅读并勾选用户服务条款及隐私协议')
+          } else if (this.imgFile.length === 0) {
+            this.$message.error('请上传营业执照')
+          } else if (this.location.length === 0) {
+            this.$message.error('请选择所在地区')
+          } else {
+            addClinic(toFormData(data)).then((res) => {
+              if (res.code === 200) {
+                this.centerDialogVisible = true
+                console.log(res)
+              } else {
+                this.$message.error(res.msg)
+              }
+            })
+          }
         } else {
-          this.$message.error(res.msg)
+          console.log('error submit!!')
+          return false
         }
       })
-      // this.$router.push();
+    },
+    goLogin() {
+      this.$router.push({ path: '/login' })
     }
   }
 }
@@ -401,6 +459,73 @@ $cursor: rgb(39, 37, 37);
 $bg: #ffffff;
 $dark_gray: #889aa4;
 $light_gray: #eee;
+.abow_dialog {
+  display: flex;
+  justify-content: center;
+  align-items: Center;
+  overflow: hidden;
+  top: -200px;
+  ::v-deep .el-dialog {
+    border-radius: 8px !important;
+    height: 522px;
+    padding-top: 30px;
+  }
+  ::v-deep .el-dialog--center .el-dialog__body {
+    padding: 25px 25px 10px !important;
+  }
+  .el-dialog {
+    margin: 0 auto !important;
+    overflow: hidden;
+    .text {
+      font-size: 32px;
+      color: #171c33;
+      position: relative;
+      left: 50%;
+      margin-left: -135px;
+      padding: 50px 38px 59px;
+    }
+    .content {
+      margin-top: 140px;
+      font-size: 14px;
+      line-height: 20px;
+      color: #171c33;
+      p {
+        text-indent: 2em;
+      }
+      .phone {
+        color: #002fa7;
+        font-size: 15px;
+      }
+    }
+    .btn {
+      width: 172px;
+      height: 62px;
+    }
+    .nextImg {
+      position: absolute;
+      top: 33%;
+      left: 50%;
+      margin-left: -30px;
+      margin-bottom: 37px;
+    }
+    .goIndex {
+      margin-top: 150px;
+      text-align: center;
+      font-size: 18px;
+    }
+    .el-dialog__body {
+      position: absolute;
+      left: 0;
+      top: 54px;
+      bottom: 0;
+      right: 0;
+      padding: 0;
+      z-index: 1;
+      overflow: hidden;
+      overflow-y: auto;
+    }
+  }
+}
 .login-container {
   min-height: 100%;
   width: 100%;

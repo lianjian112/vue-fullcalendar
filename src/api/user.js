@@ -24,3 +24,13 @@ export function logout() {
     method: 'post'
   })
 }
+
+// 验证码
+export function getKaptchaImg(data) {
+  return request({
+    url: '/captcha-api/getVerification',
+    method: 'get',
+    params: data
+  })
+}
+

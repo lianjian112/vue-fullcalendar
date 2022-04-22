@@ -1,5 +1,28 @@
 <template>
   <div class="login-container">
+    <!-- 验证码弹框 -->
+    <el-dialog
+      width="390px"
+      append-to-body
+      :visible.sync="dialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+    >
+      <Captcha
+        ref="dialogopen"
+        :l="42"
+        :r="10"
+        :w="catcha.w"
+        :h="catcha.h"
+        :blocky="catcha.blocky"
+        :imgurl="catcha.imgurl"
+        :miniimgurl="catcha.miniimgurl"
+        :slider-text="catcha.text"
+        @success="onSuccess"
+        @fail="onFail"
+        @refresh="onRefresh"
+      />
+    </el-dialog>
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
@@ -114,8 +137,11 @@
 </template>
 
 <script>
+import Captcha from '@/components/Captcha/captcha.vue'
+import { getKaptchaImg } from '@/api/user'
 export default {
   name: 'Login',
+  components: { Captcha },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value.length < 1) {
@@ -156,7 +182,19 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      checked: false
+      checked: false,
+      dialogVisible: false, // 验证码弹框
+      catcha: {
+        blocky: 0,
+        imgurl: '',
+        miniimgurl: '',
+        text: '向右滑动完成拼图',
+        h: 200,
+        w: 350,
+        sh: 45,
+        sw: 55,
+        modifyImg: ''
+      } // 图片验证码传值
     }
   },
   watch: {
@@ -166,6 +204,9 @@ export default {
       },
       immediate: true
     }
+  },
+  created() {
+    this.getImageVerifyCode()
   },
   methods: {
     showPwd() {
@@ -211,6 +252,58 @@ export default {
     // 注册中心
     register() {
       this.$router.push({ path: '/register', query: '' })
+    },
+
+    // 获取图形验证码
+    getImageVerifyCode() {
+      getKaptchaImg({ account: this.loginForm.phone, code: 3 }).then((res) => {
+        if (res && res.data) {
+          console.log(res, this.$refs.dialogopen)
+          var imgobj = res.data
+          this.catcha.blocky = 'data:image/png;base64,' + imgobj.shadeImage
+          this.catcha.imgurl = 'data:image/png;base64,' + imgobj.originImage
+          this.catcha.miniimgurl = 'data:image/png;base64,' + imgobj.cutoutImage
+          this.$nextTick(() => {
+            if (this.$refs.dialogopen) {
+              this.$refs.dialogopen.reset(imgobj.originImage)
+            }
+          })
+        }
+      })
+    },
+    onFail() {
+      console.log('fail')
+    },
+    onSuccess(left) {
+      this.loginForm.distance = left
+      // console.log('succss', left)
+      // 验证是否成功checkKaptchaImg是后台验证接口方法
+      checkKaptchaImg(left)
+        .then((res) => {
+          if (res.data) {
+            this.$refs.dialogopen.handleSuccess()
+            setTimeout(() => {
+              this.dialogVisible = false
+              this.imgurl = ''
+              this.miniimgurl = ''
+              this.loginForm.distance = left
+              this.toLogin()
+            }, 1000)
+          } else {
+            this.$refs.dialogopen.handleFail()
+            setTimeout(() => {
+              this.getImageVerifyCode()
+            }, 500)
+          }
+        })
+        .catch(() => {})
+    },
+
+    // 刷新
+    onRefresh() {
+      this.imgurl = ''
+      this.miniimgurl = ''
+      this.getImageVerifyCode()
     }
   }
 }
