@@ -3,10 +3,10 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="" />
+          <img src="../../assets/login_img/logo@2x.png" alt="">
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
         </div>
       </el-col>
       <el-col :span="12" class="containerRight">
@@ -118,8 +118,7 @@
               font-size: 18px;
             "
             @click.native.prevent="handleSubmit"
-            >提 交</el-button
-          >
+          >提 交</el-button>
         </el-form>
       </el-col>
     </el-row>
@@ -134,102 +133,106 @@
 <script>
 import {
   rePassword,
-  rePwdCode,
-} from "@/api/Login&reset&register/resetPassword.js";
+  rePwdCode
+} from '@/api/Login&reset&register/api.js'
 
 export default {
-  name: "ResetPassword",
+  name: 'ResetPassword',
   data() {
     const validateVerificationCode = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error("请输入验证码"));
+        callback(new Error('请输入验证码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePhone = (rule, value, callback) => {
       if (value.length < 11) {
-        callback(new Error("请输入11位手机号"));
+        callback(new Error('请输入11位手机号'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error("请输入密码"));
+        callback(new Error('请输入密码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePassword2 = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error("请输入密码"));
+        callback(new Error('请输入密码'))
       } else if (this.resetForm.password != this.resetForm.verifyPassword) {
-        console.log(1);
-        callback(new Error("请确认两次密码输入一致"));
+        console.log(1)
+        callback(new Error('请确认两次密码输入一致'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       resetForm: {
-        verificationCode: "",
-        password: "",
-        verifyPassword: "",
-        phone: "",
+        verificationCode: '',
+        password: '',
+        verifyPassword: '',
+        phone: ''
       },
       loginRules: {
         verificationCode: [
           {
             required: true,
-            trigger: "blur",
-            validator: validateVerificationCode,
-          },
+            trigger: 'blur',
+            validator: validateVerificationCode
+          }
         ],
-        phone: [{ required: true, trigger: "blur", validator: validatePhone }],
+        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword },
+          { required: true, trigger: 'blur', validator: validatePassword }
         ],
         verifyPassword: [
-          { required: true, trigger: "blur", validator: validatePassword2 },
-        ],
+          { required: true, trigger: 'blur', validator: validatePassword2 }
+        ]
       },
       loading: false,
-      passwordType: "password",
+      passwordType: 'password',
       redirect: undefined,
       // 验证码按钮
       flag: false, // 按钮是否可取
-      content: "获取验证码", // 按钮内文本
-      totalTime: 60, // 倒计时时间
-    };
+      content: '获取验证码', // 按钮内文本
+      totalTime: 60 // 倒计时时间
+    }
   },
   watch: {
     $route: {
-      handler: function (route) {
-        this.redirect = route.query && route.query.redirect;
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   created() {},
   methods: {
     showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
     handleSubmit() {
       this.$refs.resetForm.validate((valid) => {
         if (valid) {
           // this.loading = true;
-          const data = this.resetForm;
+          const data = {
+            account: this.resetForm.phone,
+            verificationCode: this.resetForm.verificationCode,
+            password: this.resetForm.password
+          }
           rePassword(data).then((res) => {
-            console.log(res);
+            console.log(res)
             // this.loading = false;
             // if (res.code === 0) {
             //   this.tableData = res.data.result;
@@ -237,54 +240,40 @@ export default {
             // } else {
             //   this.$message.error(res.msg);
             // }
-          });
+          })
+        } else {
+          console.log('error submit!!')
+          return false
         }
-        else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+      })
     },
 
     // 点击按钮倒计时
+    // 获取验证码
     getCaptcha() {
-      this.flag = true; // 点击之后设置按钮不可取
-      this.content = this.totalTime + "s后重新发送"; // 按钮内文本
-      const clock = window.setInterval(() => {
-        this.totalTime--;
-        this.content = this.totalTime + "s后重新发送";
-        if (this.totalTime < 0) {
-          window.clearInterval(clock);
-          this.content = "重新发送验证码";
-          this.totalTime = 60;
-          this.flag = false; // 这里重新开启
-        }
-      }, 1000);
-      const data = this.resetForm.phone;
+      const data = this.resetForm.phone
       rePwdCode({ account: data }).then((res) => {
         if (res.code === 200) {
-          console.log(res);
+          this.flag = true // 点击之后设置按钮不可取
+          this.content = this.totalTime + 's后重新发送' // 按钮内文本
+          const clock = window.setInterval(() => {
+            this.totalTime--
+            this.content = this.totalTime + 's后重新发送'
+            if (this.totalTime < 0) {
+              window.clearInterval(clock)
+              this.content = '重新发送验证码'
+              this.totalTime = 60
+              this.flag = false // 这里重新开启
+            }
+          }, 1000)
+          console.log(res)
         } else {
-          this.$message.error(res.msg);
+          this.$message.error(res.msg)
         }
-      });
-    },
-
-    //获取验证码
-    // getPWD() {
-    //   const data = this.resetForm.phone;
-    //   rePwdCode(data).then((res) => {
-    //     console.log(res);
-    //     // if (res.code === 0) {
-    //     //   this.tableData = res.data.result;
-    //     //   this.total = res.data.total;
-    //     // } else {
-    //     //   this.$message.error(res.msg);
-    //     // }
-    //   });
-    // },
-  },
-};
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss">

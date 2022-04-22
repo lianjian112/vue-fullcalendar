@@ -1,5 +1,8 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import {
+  MessageBox,
+  Message
+} from 'element-ui'
 import store from '@/store'
 // import { getToken } from '@/utils/auth'
 
@@ -35,7 +38,7 @@ service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
@@ -53,8 +56,8 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 500) {
+      // 50008:非法token; 50012:其他客户端登录; 50014:令牌过期;
+      if (res.code === 5000) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
@@ -73,11 +76,11 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    // Message({
+    //   message: error.message,
+    //   type: 'error',
+    //   duration: 5 * 1000
+    // })
     return Promise.reject(error)
   }
 )
