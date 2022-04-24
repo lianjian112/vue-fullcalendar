@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3312723 */
-  src: url('//at.alicdn.com/t/font_3312723_9ovd2keiyf.woff2?t=1650271847255') format('woff2'),
-       url('//at.alicdn.com/t/font_3312723_9ovd2keiyf.woff?t=1650271847255') format('woff'),
-       url('//at.alicdn.com/t/font_3312723_9ovd2keiyf.ttf?t=1650271847255') format('truetype');
+  src: url('//at.alicdn.com/t/font_3312723_qob7xuqzgfa.woff2?t=1650610526180') format('woff2'),
+       url('//at.alicdn.com/t/font_3312723_qob7xuqzgfa.woff?t=1650610526180') format('woff'),
+       url('//at.alicdn.com/t/font_3312723_qob7xuqzgfa.ttf?t=1650610526180') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,22 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-shangchuan:before {
+  content: "\e636";
+}
+
+.icon-bianji_2:before {
+  content: "\e6d3";
+}
+
+.icon-shangchuan2:before {
+  content: "\e62b";
+}
+
+.icon-chakan:before {
+  content: "\e62c";
 }
 
 .icon-touxiangnan:before {
@@ -23,10 +39,6 @@
 
 .icon-pozhe:before {
   content: "\e627";
-}
-
-.icon-shijian:before {
-  content: "\e628";
 }
 
 .icon-huanzheguanli:before {

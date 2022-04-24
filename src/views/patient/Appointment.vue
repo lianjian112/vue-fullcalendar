@@ -12,7 +12,7 @@
         >
           <template v-slot:eventContent="arg">
             <b>{{ arg.timeText }}</b>
-            <i>{{ arg.event.title }}</i>
+            <!-- <i>{{ arg.event.title }}</i> -->
           </template>
         </FullCalendar>
       </div>
@@ -28,6 +28,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { INITIAL_EVENTS, createEventId } from './components/event-utils'
+import { parseTime } from '@/utils'
 export default {
   components: {
     FullCalendar
@@ -42,49 +43,46 @@ export default {
         ],
         headerToolbar: {
           left: 'prev,next today',
-          center: 'title',
+          // center: 'title',
           right: ''
         },
         initialView: 'timeGridWeek',
+        validRange: {
+          // start: parseTime(new Date())
+          // end: '2022-04-21'
+        },
+        firstDay: 1, // 一周开始的是那一天
         locale: 'zh-cn', //  配置中文
         initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
         editable: true,
         selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-        weekends: true,
-        slotMinTime: '08:00',
-        slotMaxTime: '18:00',
-        slotDuration: '00:15',
+        selectOverlap: false, // 确定是否允许用户选择事件占用的时间段。
+        selectMirror: true, // 是否在用户拖动时绘制“占位符”事件。
+        weekends: true, // 是否显示周末
+        slotMinTime: '08:00', // 一天开始时间
+        slotMaxTime: '18:00', // 一天结束时间
+        slotDuration: '00:15', //  时间间隙
         allDaySlot: false, // 周，日视图时，all-day 不显示
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
         eventMouseLeave: this.eventMouseLeave,
-        displayEventTime: true,
-        slotLabelFormat: {
+        dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true },
+        slotLabelFormat: { // 周一到周日显示的格式
           hour: '2-digit',
           minute: '2-digit',
           meridiem: false,
           hour12: false // 设置时间为24小时
         },
-        views: {
-          timeGridFourDay: {
-            type: 'timeGrid',
-            duration: { days: 4 }
-          }
+        selectConstraint: {
+          startTime: '08:00', // a start time (10am in this example)
+          endTime: '18:00' // an end time (6pm in this example)
         },
-        eventRemove: this.eventRemove
-        // eventLimitNum: { // 事件显示数量限制
-        //   timeGrid: {
-        //     eventLimit: 6// adjust to 6 only for timeGridWeek/timeGridDay
-        //   }
-        // }
-        /* you can update a remote database when these fire:
-        eventAdd:
-        eventChange:
-        eventRemove:this.eventRemove
-        */
+        eventConstraint: {
+          startTime: '08:00', // a start time (10am in this example)
+          endTime: '18:00' // an end time (6pm in this example)
+        }
+
       },
       currentEvents: []
     }
@@ -93,21 +91,15 @@ export default {
   methods: {
     // 点击选择预约时间
     handleDateSelect(selectInfo) {
-      const weekArray = ['日', '一', '二', '三', '四', '五', '六']
-      const title = weekArray[new Date(selectInfo.start).getDay()]
       const calendarApi = selectInfo.view.calendar
       // 实现单选
-      const list = calendarApi.getEvents()
-      list.map((item) => item.remove())
-      calendarApi.unselect() // clear date selection
+      calendarApi.getEvents().map((item) => item.remove())
       calendarApi.addEvent({
         id: createEventId(),
-        title: '周' + title,
         start: selectInfo.startStr,
         end: selectInfo.endStr,
         allDay: selectInfo.allDay
       })
-      // }
     },
 
     // 点击当前预约信息 删除
@@ -125,10 +117,10 @@ export default {
 
     handleEvents(events) {
       this.currentEvents = events
-    },
-
-    eventRemove(events) {
-      console.log('events', events)
+      // const element = document.querySelectorAll('.fc-timegrid-cols .fc-day-past .fc-timegrid-col-frame') || []
+      // element.forEach(item => {
+      //   item.removeAttribute('onclick')
+      // })
     }
 
   }
@@ -160,6 +152,15 @@ export default {
     &-calendar{
         width: 60%;border-right: 1px solid #E3EBF1;
     }
+
+    ::v-deep .fc-scrollgrid-section-body .fc-day-past{
+      background: #EBEEF3;
+       pointer-events:none;
+      .fc-timegrid-col-frame{
+        pointer-events:none;
+      }
+    }
 }
+
 </style>
 

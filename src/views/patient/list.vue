@@ -51,10 +51,13 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList().then(response => {
-        this.tableList = response.data.items
-        setTimeout(() => { this.listLoading = false }, 1000)
-      })
+      // getList().then(response => {
+      // this.tableList = response.data.items
+      setTimeout(() => {
+        this.tableList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        this.listLoading = false
+      }, 1000)
+      // })
     }
   }
 }
