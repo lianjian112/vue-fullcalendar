@@ -25,7 +25,7 @@ export function logout() {
   })
 }
 
-// 验证码
+// 随机字母+数字验证码
 export function getKaptchaImg(data) {
   return request({
     url: '/captcha-api/getVerification',

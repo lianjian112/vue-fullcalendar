@@ -38,7 +38,6 @@
           <div class="title-container">
             <h3 class="title">重置密码</h3>
           </div>
-
           <div class="titleList">手机号</div>
           <el-form-item prop="phone">
             <span class="svg-container">
@@ -57,6 +56,31 @@
           </el-form-item>
 
           <div class="titleList">验证码</div>
+          <el-form-item prop="verificationCode2">
+            <span class="svg-container"></span>
+            <el-input
+              ref="verificationCode2"
+              v-model="resetForm.verificationCode2"
+              placeholder="请输入验证码"
+              name="verificationCode2"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+              class="el-inputClass"
+            />
+            <div class="verificationCode">
+              <!-- <el-button type="primary" :disabled="flag" @click="getCaptcha">{{
+                content
+              }}</el-button> -->
+              <img
+                :src="kaptchaImg"
+                alt="加载失败"
+                style="height: 64px; width: 148px"
+                @click="reloadVerificationCode"
+              >
+            </div>
+          </el-form-item>
+
           <el-form-item prop="verificationCode">
             <span class="svg-container">
               <svg-icon icon-class="user" />
@@ -149,6 +173,7 @@
 
 <script>
 import { rePassword, rePwdCode } from '@/api/Login&reset&register/api.js'
+import { getKaptchaImg } from '@/api/user.js'
 
 export default {
   name: 'ResetPassword',
@@ -187,6 +212,7 @@ export default {
     return {
       resetForm: {
         verificationCode: '',
+        verificationCode2: '',
         password: '',
         verifyPassword: '',
         phone: ''
@@ -214,7 +240,8 @@ export default {
       flag: false, // 按钮是否可取
       content: '获取验证码', // 按钮内文本
       totalTime: 60, // 倒计时时间
-      centerDialogVisible: false
+      centerDialogVisible: false,
+      kaptchaImg: ''
     }
   },
   watch: {
@@ -225,7 +252,9 @@ export default {
       immediate: true
     }
   },
-  created() {},
+  created() {
+    this.reloadVerificationCode()
+  },
   methods: {
     showPwd() {
       if (this.passwordType === 'password') {
@@ -250,8 +279,9 @@ export default {
             if (res.code === 200) {
               console.log(res)
               this.centerDialogVisible = true
-            } else {
             }
+            // else {
+            // }
             // this.loading = false;
             // if (res.code === 0) {
             //   this.tableData = res.data.result;
@@ -270,9 +300,15 @@ export default {
     // 点击按钮倒计时
     // 获取验证码
     getCaptcha() {
-      if (this.resetForm.phone.length === 11) {
+      if (
+        this.resetForm.phone.length === 11 &&
+        this.resetForm.verificationCode2 !== ''
+      ) {
         const data = this.resetForm.phone
-        rePwdCode({ account: data }).then((res) => {
+        rePwdCode({
+          account: data,
+          verification: this.resetForm.verificationCode2
+        }).then((res) => {
           if (res.code === 200) {
             this.flag = true // 点击之后设置按钮不可取
             this.content = this.totalTime + 's后重新发送' // 按钮内文本
@@ -291,7 +327,17 @@ export default {
             this.$message.error(res.msg)
           }
         })
+      } else {
+        this.$message.error('请填写手机号和验证码')
       }
+    },
+
+    // 获取图片验证码
+    reloadVerificationCode() {
+      getKaptchaImg().then((res) => {
+        console.log(res)
+        this.kaptchaImg = res.data ? 'data:image/png;base64,' + res.data : ''
+      })
     },
 
     goIndex() {
@@ -446,7 +492,7 @@ $light_gray: #eee;
       position: relative;
       width: 520px;
       max-width: 100%;
-      padding: 160px 35px 0;
+      padding: 10% 35px 0;
       margin: 0 auto;
       overflow: hidden;
     }
@@ -464,9 +510,10 @@ $light_gray: #eee;
         width: 150px;
         border-radius: 0 4px 4px 0;
       }
+      cursor: pointer;
       vertical-align: middle;
       width: 104px;
-      height: 100%;
+      height: 64px;
       display: inline-block;
     }
     .titleList {
