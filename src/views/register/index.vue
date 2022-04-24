@@ -51,10 +51,30 @@
           </div>
 
           <div class="titleList">验证码</div>
+          <el-form-item prop="verificationCode2">
+            <span class="svg-container"></span>
+            <el-input
+              ref="verificationCode2"
+              v-model="registerForm.verificationCode2"
+              placeholder="请输入验证码"
+              name="verificationCode2"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+              class="el-inputClass"
+            />
+            <div class="verificationCode">
+              <img
+                :src="kaptchaImg"
+                alt="加载失败"
+                style="height: 64px; width: 149px"
+                @click="reloadVerificationCode"
+              >
+            </div>
+          </el-form-item>
+
           <el-form-item prop="verificationCode">
-            <span class="svg-container">
-              <svg-icon icon-class="user" />
-            </span>
+            <span class="svg-container"> </span>
             <el-input
               ref="verificationCode"
               v-model="registerForm.verificationCode"
@@ -106,6 +126,7 @@ import {
   getSmsRegisterCode,
   checkMobile
 } from '@/api/Login&reset&register/api.js'
+import { getKaptchaImg } from '@/api/user.js'
 
 export default {
   name: 'Login',
@@ -134,6 +155,7 @@ export default {
     return {
       registerForm: {
         verificationCode: '',
+        verificationCode2: '',
         password: '',
         phone: ''
       },
@@ -154,7 +176,8 @@ export default {
       // 验证码按钮
       flag: false, // 按钮是否可取
       content: '获取验证码', // 按钮内文本
-      totalTime: 60 // 倒计时时间
+      totalTime: 60, // 倒计时时间
+      kaptchaImg: '' // 验证码图片；base64
     }
   },
   watch: {
@@ -163,6 +186,9 @@ export default {
         this.disabled = false
       }
     }
+  },
+  created() {
+    this.reloadVerificationCode()
   },
   methods: {
     next() {
@@ -183,6 +209,13 @@ export default {
         }
       })
     },
+    // 获取图片验证码
+    reloadVerificationCode() {
+      getKaptchaImg().then((res) => {
+        console.log(res)
+        this.kaptchaImg = res.data ? 'data:image/png;base64,' + res.data : ''
+      })
+    },
     // 返回登录
     returnLogin() {
       this.$router.push({ path: '/login', query: '' })
@@ -190,7 +223,10 @@ export default {
     // 点击按钮倒计时
     getCaptcha() {
       const data = this.registerForm.phone
-      getSmsRegisterCode({ contactMobile: data }).then((res) => {
+      getSmsRegisterCode({
+        contactMobile: data,
+        verification: this.registerForm.verificationCode2
+      }).then((res) => {
         if (res.code === 200) {
           this.flag = true // 点击之后设置按钮不可取
           this.content = this.totalTime + 's后重新发送' // 按钮内文本
@@ -392,9 +428,10 @@ $light_gray: #eee;
         width: 150px;
         border-radius: 0 4px 4px 0;
       }
+      cursor: pointer;
       vertical-align: middle;
       width: 104px;
-      height: 100%;
+      height: 64px;
       display: inline-block;
     }
     .tips1 {

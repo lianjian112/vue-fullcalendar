@@ -1,5 +1,22 @@
 <template>
   <div class="login-container">
+    <!-- 重置成功提示 -->
+    <el-dialog
+      title=""
+      :visible.sync="centerDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      width="375px"
+      center
+      class="abow_dialog"
+    >
+      <span class="text">密码重置成功！</span>
+      <img src="../../assets/resetPassword/next.png" alt="" class="nextImg">
+      <div class="goIndex" @click="goIndex">返回首页</div>
+    </el-dialog>
+    <!-- 重置成功提示 -->
+
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
@@ -21,7 +38,6 @@
           <div class="title-container">
             <h3 class="title">重置密码</h3>
           </div>
-
           <div class="titleList">手机号</div>
           <el-form-item prop="phone">
             <span class="svg-container">
@@ -40,6 +56,31 @@
           </el-form-item>
 
           <div class="titleList">验证码</div>
+          <el-form-item prop="verificationCode2">
+            <span class="svg-container"></span>
+            <el-input
+              ref="verificationCode2"
+              v-model="resetForm.verificationCode2"
+              placeholder="请输入验证码"
+              name="verificationCode2"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+              class="el-inputClass"
+            />
+            <div class="verificationCode">
+              <!-- <el-button type="primary" :disabled="flag" @click="getCaptcha">{{
+                content
+              }}</el-button> -->
+              <img
+                :src="kaptchaImg"
+                alt="加载失败"
+                style="height: 64px; width: 148px"
+                @click="reloadVerificationCode"
+              >
+            </div>
+          </el-form-item>
+
           <el-form-item prop="verificationCode">
             <span class="svg-container">
               <svg-icon icon-class="user" />
@@ -131,10 +172,8 @@
 </template>
 
 <script>
-import {
-  rePassword,
-  rePwdCode
-} from '@/api/Login&reset&register/api.js'
+import { rePassword, rePwdCode } from '@/api/Login&reset&register/api.js'
+import { getKaptchaImg } from '@/api/user.js'
 
 export default {
   name: 'ResetPassword',
@@ -163,7 +202,7 @@ export default {
     const validatePassword2 = (rule, value, callback) => {
       if (value.length < 1) {
         callback(new Error('请输入密码'))
-      } else if (this.resetForm.password != this.resetForm.verifyPassword) {
+      } else if (this.resetForm.password !== this.resetForm.verifyPassword) {
         console.log(1)
         callback(new Error('请确认两次密码输入一致'))
       } else {
@@ -173,6 +212,7 @@ export default {
     return {
       resetForm: {
         verificationCode: '',
+        verificationCode2: '',
         password: '',
         verifyPassword: '',
         phone: ''
@@ -199,7 +239,9 @@ export default {
       // 验证码按钮
       flag: false, // 按钮是否可取
       content: '获取验证码', // 按钮内文本
-      totalTime: 60 // 倒计时时间
+      totalTime: 60, // 倒计时时间
+      centerDialogVisible: false,
+      kaptchaImg: ''
     }
   },
   watch: {
@@ -210,7 +252,9 @@ export default {
       immediate: true
     }
   },
-  created() {},
+  created() {
+    this.reloadVerificationCode()
+  },
   methods: {
     showPwd() {
       if (this.passwordType === 'password') {
@@ -232,7 +276,12 @@ export default {
             password: this.resetForm.password
           }
           rePassword(data).then((res) => {
-            console.log(res)
+            if (res.code === 200) {
+              console.log(res)
+              this.centerDialogVisible = true
+            }
+            // else {
+            // }
             // this.loading = false;
             // if (res.code === 0) {
             //   this.tableData = res.data.result;
@@ -251,26 +300,48 @@ export default {
     // 点击按钮倒计时
     // 获取验证码
     getCaptcha() {
-      const data = this.resetForm.phone
-      rePwdCode({ account: data }).then((res) => {
-        if (res.code === 200) {
-          this.flag = true // 点击之后设置按钮不可取
-          this.content = this.totalTime + 's后重新发送' // 按钮内文本
-          const clock = window.setInterval(() => {
-            this.totalTime--
-            this.content = this.totalTime + 's后重新发送'
-            if (this.totalTime < 0) {
-              window.clearInterval(clock)
-              this.content = '重新发送验证码'
-              this.totalTime = 60
-              this.flag = false // 这里重新开启
-            }
-          }, 1000)
-          console.log(res)
-        } else {
-          this.$message.error(res.msg)
-        }
+      if (
+        this.resetForm.phone.length === 11 &&
+        this.resetForm.verificationCode2 !== ''
+      ) {
+        const data = this.resetForm.phone
+        rePwdCode({
+          account: data,
+          verification: this.resetForm.verificationCode2
+        }).then((res) => {
+          if (res.code === 200) {
+            this.flag = true // 点击之后设置按钮不可取
+            this.content = this.totalTime + 's后重新发送' // 按钮内文本
+            const clock = window.setInterval(() => {
+              this.totalTime--
+              this.content = this.totalTime + 's后重新发送'
+              if (this.totalTime < 0) {
+                window.clearInterval(clock)
+                this.content = '重新发送验证码'
+                this.totalTime = 60
+                this.flag = false // 这里重新开启
+              }
+            }, 1000)
+            console.log(res)
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else {
+        this.$message.error('请填写手机号和验证码')
+      }
+    },
+
+    // 获取图片验证码
+    reloadVerificationCode() {
+      getKaptchaImg().then((res) => {
+        console.log(res)
+        this.kaptchaImg = res.data ? 'data:image/png;base64,' + res.data : ''
       })
+    },
+
+    goIndex() {
+      this.$router.push({ path: '/login' })
     }
   }
 }
@@ -341,6 +412,54 @@ $bg: #ffffff;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
+.abow_dialog {
+  display: flex;
+  justify-content: center;
+  align-items: Center;
+  overflow: hidden;
+  top: -200px;
+  ::v-deep .el-dialog {
+    border-radius: 8px !important;
+    height: 410px;
+    padding-top: 30px;
+  }
+  .el-dialog {
+    margin: 0 auto !important;
+    height: 410px;
+    overflow: hidden;
+    .text {
+      font-size: 32px;
+      color: #171c33;
+      position: relative;
+      left: 50%;
+      margin-left: -135px;
+      padding: 50px 22px 59px;
+    }
+    .nextImg {
+      position: absolute;
+      top: 45%;
+      margin-bottom: 37px;
+    }
+    .goIndex {
+      margin-top: 150px;
+      text-align: center;
+      color: #b0b7c3;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .el-dialog__body {
+      position: absolute;
+      left: 0;
+      top: 54px;
+      bottom: 0;
+      right: 0;
+      padding: 0;
+      z-index: 1;
+      overflow: hidden;
+      overflow-y: auto;
+    }
+  }
+}
 .login-container {
   min-height: 100%;
   width: 100%;
@@ -373,7 +492,7 @@ $light_gray: #eee;
       position: relative;
       width: 520px;
       max-width: 100%;
-      padding: 160px 35px 0;
+      padding: 10% 35px 0;
       margin: 0 auto;
       overflow: hidden;
     }
@@ -391,9 +510,10 @@ $light_gray: #eee;
         width: 150px;
         border-radius: 0 4px 4px 0;
       }
+      cursor: pointer;
       vertical-align: middle;
       width: 104px;
-      height: 100%;
+      height: 64px;
       display: inline-block;
     }
     .titleList {

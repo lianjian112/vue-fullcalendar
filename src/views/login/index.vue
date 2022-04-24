@@ -77,8 +77,31 @@
               />
             </span>
           </el-form-item>
+
+          <div class="titleList">验证码</div>
+          <el-form-item prop="verificationCode2">
+            <span class="svg-container"></span>
+            <el-input
+              ref="verificationCode2"
+              v-model="loginForm.verificationCode2"
+              placeholder="请输入验证码"
+              name="verificationCode2"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+              class="el-inputClass"
+            />
+            <div class="verificationCode">
+              <img
+                :src="kaptchaImg"
+                alt="加载失败"
+                style="height: 64px; width: 149px"
+                @click="reloadVerificationCode"
+              >
+            </div>
+          </el-form-item>
           <el-checkbox
-            v-model="checked"
+            v-model="choose_tag"
             class="remPassword"
           >记住密码</el-checkbox>
           <el-link
@@ -114,8 +137,15 @@
 </template>
 
 <script>
+import { getKaptchaImg } from '@/api/user'
+// cookie操作
+import Cookie from 'js-cookie'
+
+// base64加密
+const Base64 = require('js-base64').Base64
 export default {
   name: 'Login',
+  components: {},
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value.length < 1) {
@@ -140,9 +170,10 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'hg123456',
-        phone: '13678355884'
+        username: '',
+        password: '',
+        phone: '',
+        verificationCode2: ''
       },
       loginRules: {
         username: [
@@ -156,7 +187,8 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      checked: false
+      kaptchaImg: '',
+      choose_tag: false // 记住密码
     }
   },
   watch: {
@@ -165,6 +197,19 @@ export default {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
+    }
+  },
+  created() {
+    this.reloadVerificationCode()
+    const username = Cookie.get('username')
+    const account = Cookie.get('account')
+    const password = Base64.decode(Cookie.get('password'))
+    // 如果存在赋值给表单，并且将记住密码勾选
+    if (account) {
+      this.loginForm.username = username
+      this.loginForm.phone = account
+      this.loginForm.password = password
+      this.choose_tag = true
     }
   },
   methods: {
@@ -185,12 +230,19 @@ export default {
           const data = {
             account: this.loginForm.phone,
             clinicNo: this.loginForm.username,
-            password: this.loginForm.password
+            password: this.loginForm.password,
+            verification: this.loginForm.verificationCode2
           }
           this.$store
             .dispatch('user/login', data)
             .then(() => {
               console.log('登陆成功')
+              if (this.choose_tag) {
+                Cookie.set('username', this.loginForm.username)
+                Cookie.set('account', this.loginForm.phone)
+                const passWord = Base64.encode(this.loginForm.password)
+                Cookie.set('password', passWord)
+              }
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             })
@@ -202,6 +254,13 @@ export default {
           console.log('error submit!!')
           return false
         }
+      })
+    },
+    // 获取图片验证码
+    reloadVerificationCode() {
+      getKaptchaImg().then((res) => {
+        console.log(res)
+        this.kaptchaImg = res.data ? 'data:image/png;base64,' + res.data : ''
       })
     },
     // 忘记密码
@@ -234,8 +293,7 @@ $cursor: rgb(39, 37, 37);
 .login-container {
   .el-input {
     display: inline-block;
-    height: 47px;
-    width: 85%;
+    width: 60%;
 
     input {
       background: transparent;
@@ -280,7 +338,9 @@ $cursor: rgb(39, 37, 37);
 $bg: #ffffff;
 $dark_gray: #889aa4;
 $light_gray: #eee;
-
+.el-input {
+  width: 60% !important;
+}
 .login-container {
   min-height: 100%;
   width: 100%;
@@ -313,11 +373,16 @@ $light_gray: #eee;
       position: relative;
       width: 520px;
       max-width: 100%;
-      padding: 160px 35px 0;
+      padding: 12% 35px 0;
       margin: 0 auto;
       overflow: hidden;
     }
-
+    .verificationCode {
+      cursor: pointer;
+      vertical-align: middle;
+      height: 64px !important;
+      display: inline-block;
+    }
     .tips {
       text-align: center;
       .span1 {
