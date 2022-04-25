@@ -7,6 +7,7 @@
     <div class="appointment-content">
       <div class="appointment-calendar">
         <FullCalendar
+          ref="fullCalendar"
           class="demo-app-calendar"
           :options="calendarOptions"
         >
@@ -42,16 +43,25 @@ export default {
           interactionPlugin // needed for dateClick
         ],
         headerToolbar: {
-          left: 'prev,next today',
+          left: 'prev,next today,myCustomButton',
           // center: 'title',
           right: ''
         },
+        customButtons: {
+          myCustomButton: {
+            text: '自定义按钮', click: () => {
+              // alert('点击了自定义按钮!')
+
+              this.next()
+            }
+          }
+        },
         initialView: 'timeGridWeek',
         validRange: {
-          // start: parseTime(new Date())
+          start: parseTime(new Date())
           // end: '2022-04-21'
         },
-        firstDay: 1, // 一周开始的是那一天
+        firstDay: 0, // 一周开始的是那一天
         locale: 'zh-cn', //  配置中文
         initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
         editable: true,
@@ -91,6 +101,7 @@ export default {
   methods: {
     // 点击选择预约时间
     handleDateSelect(selectInfo) {
+      debugger
       const calendarApi = selectInfo.view.calendar
       // 实现单选
       calendarApi.getEvents().map((item) => item.remove())
@@ -101,7 +112,10 @@ export default {
         allDay: selectInfo.allDay
       })
     },
-
+    next() {
+      console.log('this.$refs.fullCalendar', this.$refs.fullCalendar.fireMethod)
+      // this.$refs.fullCalendar.prev()
+    },
     // 点击当前预约信息 删除
     handleEventClick(clickInfo) {
       this.$confirm('此操作将删除该条预约信息, 是否继续?', '提示', {
@@ -117,6 +131,9 @@ export default {
 
     handleEvents(events) {
       this.currentEvents = events
+      //       document.querySelector('').click(function() {
+      //     $('#calendar').fullCalendar('prev');
+      // });
       // const element = document.querySelectorAll('.fc-timegrid-cols .fc-day-past .fc-timegrid-col-frame') || []
       // element.forEach(item => {
       //   item.removeAttribute('onclick')
@@ -153,13 +170,13 @@ export default {
         width: 60%;border-right: 1px solid #E3EBF1;
     }
 
-    ::v-deep .fc-scrollgrid-section-body .fc-day-past{
-      background: #EBEEF3;
-       pointer-events:none;
-      .fc-timegrid-col-frame{
-        pointer-events:none;
-      }
-    }
+    // ::v-deep .fc-scrollgrid-section-body .fc-day-past{
+    //    pointer-events:none;
+    //    background: #EBEEF3;
+    //   .fc-timegrid-col-frame{
+    //     pointer-events:none;
+    //   }
+    // }
 }
 
 </style>
