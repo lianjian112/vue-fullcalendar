@@ -90,6 +90,7 @@
               tabindex="1"
               auto-complete="on"
               class="el-inputClass"
+              @keyup.enter.native="handleLogin"
             />
             <div class="verificationCode">
               <img
