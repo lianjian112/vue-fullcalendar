@@ -3,10 +3,10 @@
     <el-row>
       <el-col :span="12" class="containerLeft">
         <div class="logoImg">
-          <img src="../../assets/login_img/logo@2x.png" alt="">
+          <img src="../../assets/login_img/logo@2x.png" alt="" />
         </div>
         <div>
-          <h1 class="title">骅光口腔睿齿云门诊<br>管理系统</h1>
+          <h1 class="title">骅光口腔睿齿云门诊<br />管理系统</h1>
         </div>
       </el-col>
       <el-col :span="12" class="containerRight">
@@ -72,9 +72,7 @@
               @keyup.enter.native="handleLogin"
             />
             <span class="show-pwd" @click="showPwd">
-              <svg-icon
-                :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-              />
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
             </span>
           </el-form-item>
 
@@ -90,6 +88,7 @@
               tabindex="1"
               auto-complete="on"
               class="el-inputClass"
+              @keyup.enter.native="handleLogin"
             />
             <div class="verificationCode">
               <img
@@ -97,29 +96,19 @@
                 alt="加载失败"
                 style="height: 64px; width: 149px"
                 @click="reloadVerificationCode"
-              >
+              />
             </div>
           </el-form-item>
-          <el-checkbox
-            v-model="choose_tag"
-            class="remPassword"
-          >记住密码</el-checkbox>
-          <el-link
-            class="forgetPassword"
-            @click="forgetPassword"
-          >忘记密码</el-link>
+          <el-checkbox v-model="choose_tag" class="remPassword">记住密码</el-checkbox>
+          <el-link class="forgetPassword" @click="forgetPassword">忘记密码</el-link>
 
           <el-button
             :loading="loading"
             type="primary"
-            style="
-              width: 100%;
-              margin-bottom: 24px;
-              height: 62px;
-              font-size: 18px;
-            "
+            style="width: 100%; margin-bottom: 24px; height: 62px; font-size: 18px"
             @click.native.prevent="handleLogin"
-          >登 录</el-button>
+            >登 录</el-button
+          >
 
           <div class="tips">
             <span class="span1">还没有账号？</span>
@@ -137,142 +126,138 @@
 </template>
 
 <script>
-import { getKaptchaImg } from '@/api/user'
+import { getKaptchaImg } from "@/api/user";
 // cookie操作
-import Cookie from 'js-cookie'
+import Cookie from "js-cookie";
 
 // base64加密
-const Base64 = require('js-base64').Base64
+const Base64 = require("js-base64").Base64;
 export default {
-  name: 'Login',
+  name: "Login",
   components: {},
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error('请输入诊所机构码'))
+        callback(new Error("请输入诊所机构码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePhone = (rule, value, callback) => {
       if (value.length !== 11) {
-        callback(new Error('请输入11位手机号'))
+        callback(new Error("请输入11位手机号"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error('请输入密码'))
+        callback(new Error("请输入密码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        username: '',
-        password: '',
-        phone: '',
-        verificationCode2: ''
+        username: "",
+        password: "",
+        phone: "",
+        verificationCode2: "",
       },
       loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
-        ],
-        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
-        password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+        username: [{ required: true, trigger: "blur", validator: validateUsername }],
+        phone: [{ required: true, trigger: "blur", validator: validatePhone }],
+        password: [{ required: true, trigger: "blur", validator: validatePassword }],
       },
       loading: false,
-      passwordType: 'password',
+      passwordType: "password",
       redirect: undefined,
-      kaptchaImg: '',
-      choose_tag: false // 记住密码
-    }
+      kaptchaImg: "",
+      choose_tag: false, // 记住密码
+    };
   },
   watch: {
     $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect;
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {
-    this.reloadVerificationCode()
-    const username = Cookie.get('username')
-    const account = Cookie.get('account')
-    const password = Base64.decode(Cookie.get('password'))
+    this.reloadVerificationCode();
+    const username = Cookie.get("username");
+    const account = Cookie.get("account");
+    const password = Base64.decode(Cookie.get("password"));
     // 如果存在赋值给表单，并且将记住密码勾选
     if (account) {
-      this.loginForm.username = username
-      this.loginForm.phone = account
-      this.loginForm.password = password
-      this.choose_tag = true
+      this.loginForm.username = username;
+      this.loginForm.phone = account;
+      this.loginForm.password = password;
+      this.choose_tag = true;
     }
   },
   methods: {
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           const data = {
             account: this.loginForm.phone,
             clinicNo: this.loginForm.username,
             password: this.loginForm.password,
-            verification: this.loginForm.verificationCode2
-          }
+            verification: this.loginForm.verificationCode2,
+          };
           this.$store
-            .dispatch('user/login', data)
+            .dispatch("user/login", data)
             .then(() => {
-              console.log('登陆成功')
+              console.log("登陆成功");
               if (this.choose_tag) {
-                Cookie.set('username', this.loginForm.username)
-                Cookie.set('account', this.loginForm.phone)
-                const passWord = Base64.encode(this.loginForm.password)
-                Cookie.set('password', passWord)
+                Cookie.set("username", this.loginForm.username);
+                Cookie.set("account", this.loginForm.phone);
+                const passWord = Base64.encode(this.loginForm.password);
+                Cookie.set("password", passWord);
               }
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
+              this.$router.push({ path: this.redirect || "/" });
+              this.loading = false;
             })
             .catch(() => {
-              this.loading = false
-            })
+              this.loading = false;
+            });
           // this.$router.push({ path: "/" });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     // 获取图片验证码
     reloadVerificationCode() {
       getKaptchaImg().then((res) => {
-        console.log(res)
-        this.kaptchaImg = res.data ? 'data:image/png;base64,' + res.data : ''
-      })
+        console.log(res);
+        this.kaptchaImg = res.data ? "data:image/png;base64," + res.data : "";
+      });
     },
     // 忘记密码
     forgetPassword() {
-      this.$router.push({ path: '/resetPassword', query: '' })
+      this.$router.push({ path: "/resetPassword", query: "" });
     },
     // 注册中心
     register() {
-      this.$router.push({ path: '/register', query: '' })
-    }
-  }
-}
+      this.$router.push({ path: "/register", query: "" });
+    },
+  },
+};
 </script>
 
 <style lang="scss">
