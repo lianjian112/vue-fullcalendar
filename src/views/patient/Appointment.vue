@@ -20,25 +20,28 @@
       <div class="appointment-userInfo"></div>
       <div class="appointment-class"></div>
     </div>
+
   </div>
 </template>
 
 <script>
 import FullCalendar from '@fullcalendar/vue'
-import dayGridPlugin from '@fullcalendar/daygrid'
+// import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { INITIAL_EVENTS, createEventId } from './components/event-utils'
 import { parseTime } from '@/utils'
+// console.log('parseTime(new Date())', parseTime(new Date(), 'yy-mm-dd'))
 export default {
   components: {
     FullCalendar
   },
   data() {
     return {
+      dialogVisible: true,
       calendarOptions: {
         plugins: [
-          dayGridPlugin,
+          // dayGridPlugin,
           timeGridPlugin,
           interactionPlugin // needed for dateClick
         ],
@@ -52,13 +55,18 @@ export default {
             text: '自定义按钮', click: () => {
               // alert('点击了自定义按钮!')
 
-              this.next()
+              // this.next()
+              const calendarApi = this.$refs.fullCalendar.getApi()
+              console.log(calendarApi.prev)
+              calendarApi.prev()
+              // console.log(this.$refs.fullCalendar.getApi())
             }
           }
         },
         initialView: 'timeGridWeek',
+        // initialDate: '2022-04-24',
         validRange: {
-          start: parseTime(new Date())
+          // start: parseTime(new Date())
           // end: '2022-04-21'
         },
         firstDay: 0, // 一周开始的是那一天
@@ -69,10 +77,12 @@ export default {
         selectOverlap: false, // 确定是否允许用户选择事件占用的时间段。
         selectMirror: true, // 是否在用户拖动时绘制“占位符”事件。
         weekends: true, // 是否显示周末
+        unselectAuto: true,
         slotMinTime: '08:00', // 一天开始时间
         slotMaxTime: '18:00', // 一天结束时间
         slotDuration: '00:15', //  时间间隙
         allDaySlot: false, // 周，日视图时，all-day 不显示
+        eventMouseover: this.dayClick,
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
@@ -91,7 +101,37 @@ export default {
         eventConstraint: {
           startTime: '08:00', // a start time (10am in this example)
           endTime: '18:00' // an end time (6pm in this example)
-        }
+        },
+        events: [
+          {
+            id: 'disableRegionId',
+            title: '这是过去选中的预约',
+            constraint: 'disableRegion',
+            editable: false,
+            disable: true,
+            backgroundColor: '#fff',
+            textColor: '#B0B7C3',
+            borderColor: '#B0B7C3',
+            start: '2022-04-25T10:00:00',
+            end: '2022-04-25T11:00:00'
+          },
+          {
+            id: 'nowRegionId',
+            title: '这是可选的预约',
+            constraint: 'testGroupId',
+            start: '2022-04-26T11:00:00',
+            end: '2022-04-26T12:00:00',
+            startEditable: true
+          },
+          {
+            groupId: 'testGroupId',
+            start: parseTime(new Date(), '{y}-{m}-{d}'),
+            end: '3022-04-28T18:00:00',
+            display: 'none',
+            startEditable: true
+          }
+
+        ]
 
       },
       currentEvents: []
@@ -99,25 +139,42 @@ export default {
   },
   mounted() {},
   methods: {
+    dayClick(e) {
+      console.log(e)
+    },
     // 点击选择预约时间
     handleDateSelect(selectInfo) {
-      debugger
       const calendarApi = selectInfo.view.calendar
+
+      const targetTimeNumber = Date.parse(parseTime(selectInfo.start, '{y}-{m}-{d}'))
+      const nowTimeNumber = Date.parse(parseTime(new Date(), '{y}-{m}-{d}'))
+      // 不能选中禁用区域
+      if (targetTimeNumber < nowTimeNumber) {
+        calendarApi.unselect()// 取消选择
+        return
+      }
+
       // 实现单选
       calendarApi.getEvents().map((item) => item.remove())
       calendarApi.addEvent({
         id: createEventId(),
+        constraint: 'testGroupId',
+        title: '这是可选的预约',
         start: selectInfo.startStr,
         end: selectInfo.endStr,
         allDay: selectInfo.allDay
       })
+      calendarApi.unselect()// 取消选择
     },
+
     next() {
-      console.log('this.$refs.fullCalendar', this.$refs.fullCalendar.fireMethod)
+      console.log('this.$refs.fullCalendar', this.$refs.fullCalendar.prev)
       // this.$refs.fullCalendar.prev()
     },
     // 点击当前预约信息 删除
     handleEventClick(clickInfo) {
+      // 过去的不可更改
+      if (clickInfo.event.constraint === 'disableRegion') return
       this.$confirm('此操作将删除该条预约信息, 是否继续?', '提示', {
         type: 'warning'
       }).then(() => {
@@ -131,12 +188,16 @@ export default {
 
     handleEvents(events) {
       this.currentEvents = events
+      // console.log('events', events)
       //       document.querySelector('').click(function() {
       //     $('#calendar').fullCalendar('prev');
       // });
-      // const element = document.querySelectorAll('.fc-timegrid-cols .fc-day-past .fc-timegrid-col-frame') || []
+      // const element = document.querySelectorAll('.fc-timegrid-cols .fc-day-past ') || []
       // element.forEach(item => {
-      //   item.removeAttribute('onclick')
+      //   item.addEventListener('click', function(e) {
+      //     console.log('itemitemitemitemitem')
+      //     // e.stopPropagation()// 取消事件冒泡
+      //   })
       // })
     }
 
@@ -168,8 +229,12 @@ export default {
     }
     &-calendar{
         width: 60%;border-right: 1px solid #E3EBF1;
+        // color: '#257e4a'
     }
-
+    ::v-deep .fc-day-past{
+      background: #EBEEF3;
+      //  pointer-events:none;
+    }
     // ::v-deep .fc-scrollgrid-section-body .fc-day-past{
     //    pointer-events:none;
     //    background: #EBEEF3;

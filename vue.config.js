@@ -20,6 +20,7 @@ const host = process.env.HOST || process.env.npm_config_host || IP
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
+  runtimeCompiler: true,
   /**
    * You will need to set publicPath if you plan to deploy your site under a sub path,
    * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
@@ -49,7 +50,7 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: true
-    },
+    }
     // proxy: process.env.VUE_APP_BASE_API
     // {
     //   '/api': {

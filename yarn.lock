@@ -974,7 +974,47 @@
     "@fullcalendar/common" "~5.11.0"
     tslib "^2.1.0"
 
-"@fullcalendar/timegrid@^5.11.0":
+"@fullcalendar/premium-common@~5.11.0":
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/premium-common/-/premium-common-5.11.0.tgz#984ad16dba011c656ebc9ecb358bf6f2733c5e88"
+  integrity sha512-XVLJwJQ26EhuglBM1flmrKtNt0BEUBHoazko/wvMiz5Yz17eABKQreFTidipOwjL3s74ifQzDoYpkQVn8TzpZQ==
+  dependencies:
+    "@fullcalendar/common" "~5.11.0"
+    tslib "^2.1.0"
+
+"@fullcalendar/resource-common@~5.11.0":
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/resource-common/-/resource-common-5.11.0.tgz#fdf92c3629282504c3ce766fbca423ee6fd7f1ea"
+  integrity sha512-zO6UK9IKo7O8Uj5Y1t9sLMsLyNmxAliriAlz/NNhk//O/yGmQZ5MQOgVDg2qCZpDOWgQeuSZOkTTJdud5ISe2Q==
+  dependencies:
+    "@fullcalendar/common" "~5.11.0"
+    "@fullcalendar/premium-common" "~5.11.0"
+    tslib "^2.1.0"
+
+"@fullcalendar/resource-daygrid@~5.11.0":
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/resource-daygrid/-/resource-daygrid-5.11.0.tgz#8edbbea54f483a4a418521115db8e395192dfece"
+  integrity sha512-RLPIxjURoof6/hgG6tlw+suKbwK5rE0nqT4PGKSdMfEJmvYNtywDKRyQJKkUkbTJKTFMmjixxG/M18Js7Htx8w==
+  dependencies:
+    "@fullcalendar/common" "~5.11.0"
+    "@fullcalendar/daygrid" "~5.11.0"
+    "@fullcalendar/premium-common" "~5.11.0"
+    "@fullcalendar/resource-common" "~5.11.0"
+    tslib "^2.1.0"
+
+"@fullcalendar/resource-timegrid@^5.11.0":
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/resource-timegrid/-/resource-timegrid-5.11.0.tgz#7cea34173514a0ecdc276e57838c5030fbea6fad"
+  integrity sha512-QGkBAvrnE5hXd/0/TIh0q+8Sfx/ZEvNJFY0iRvT0OD0StU6UdE5OK668Q/qKCatujKSzPMPizcK95PJXxcJz9w==
+  dependencies:
+    "@fullcalendar/common" "~5.11.0"
+    "@fullcalendar/premium-common" "~5.11.0"
+    "@fullcalendar/resource-common" "~5.11.0"
+    "@fullcalendar/resource-daygrid" "~5.11.0"
+    "@fullcalendar/timegrid" "~5.11.0"
+    tslib "^2.1.0"
+
+"@fullcalendar/timegrid@^5.11.0", "@fullcalendar/timegrid@~5.11.0":
   version "5.11.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-5.11.0.tgz#b41153ef301f21f8c1e19a65023493c48c8bacf5"
   integrity sha512-GNy+/PwAj510PS4Fu18Mf/CytNBVftFU7M8XwsUXOCJ6ouyroHZje0a7k5cH/nE5IQ6NJZfH2eAPBlxGath1MQ==
@@ -4273,11 +4313,6 @@ es-to-primitive@^1.2.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.2"
 
-es6-promise@^4.0.5:
-  version "4.2.8"
-  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.8.tgz#4eb21594c972bc40553d276e510539143db53e0a"
-  integrity sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w==
-
 escalade@^3.1.1:
   version "3.1.1"
   resolved "https://registry.npmjs.org/escalade/-/escalade-3.1.1.tgz"
@@ -6613,6 +6648,11 @@ js-base64@^2.1.9:
   resolved "https://registry.npmjs.org/js-base64/-/js-base64-2.6.4.tgz"
   integrity sha512-pZe//GGmwJndub7ZghVHz7vjb2LgC1m8B07Au3eYqeqv9emhESByMXxaEgkUkEqJe87oBbSniGYoQNIBklc7IQ==
 
+js-base64@^3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.7.2.tgz#816d11d81a8aff241603d19ce5761e13e41d7745"
+  integrity sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==
+
 js-beautify@^1.6.12, js-beautify@^1.6.14:
   version "1.14.2"
   resolved "https://registry.npmjs.org/js-beautify/-/js-beautify-1.14.2.tgz"
@@ -6623,10 +6663,10 @@ js-beautify@^1.6.12, js-beautify@^1.6.14:
     glob "^7.1.3"
     nopt "^5.0.0"
 
-js-cookie@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.npmjs.org/js-cookie/-/js-cookie-2.2.0.tgz"
-  integrity sha1-Gywnmm7s44ChIWi5JIUmWzWx7/s=
+js-cookie@^2.2.0:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
+  integrity sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
 
 js-message@1.0.7:
   version "1.0.7"
@@ -10795,15 +10835,6 @@ vue-eslint-parser@^7.0.0:
     lodash "^4.17.21"
     semver "^6.3.0"
 
-vue-fullcalendar@1.0.9, vue-fullcalendar@^1.0.5:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/vue-fullcalendar/-/vue-fullcalendar-1.0.9.tgz#a853bb25946252277533b9994ef503cfacb01233"
-  integrity sha1-qFO7JZRiUid1M7mZTvUDz6ywEjM=
-  dependencies:
-    es6-promise "^4.0.5"
-    vue "^2.1.8"
-    vue-fullcalendar "^1.0.5"
-
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
   resolved "https://registry.npmjs.org/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz"
@@ -10867,11 +10898,6 @@ vue@2.6.10:
   version "2.6.10"
   resolved "https://registry.npmjs.org/vue/-/vue-2.6.10.tgz"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
-
-vue@^2.1.8:
-  version "2.6.14"
-  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
-  integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
 
 vuex@3.1.0:
   version "3.1.0"
