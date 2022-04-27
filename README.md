@@ -1,4 +1,6 @@
-# rcy-pc
+### fullcalendar
+
+基于fullcalendar插件二次封装的vue日程表。支持：单多选，可选范围控制，单双击事件，禁用，自定义样式，事件拖拽动画
 
 ## Project setup
 
@@ -20,7 +22,7 @@ yarn install
 
 ### yarn 在 hBuilder 终端可能会报权限错误，请参考[about_execution_policies](https://docs.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7)
 
-### 本工程已经集成了 [uviewui](https://www.uviewui.com/), 使用时无需 import，直接使用组件即可，并且是按需加入
+
 
 ### 本工程已经集成[tailwindcss](https://tailwindcss.com/)，使用详情请查阅官方文档
 
