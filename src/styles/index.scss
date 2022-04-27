@@ -5,6 +5,7 @@
 @import './sidebar.scss';
 body {
   height: 100%;
+  font-size: 14px;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -61,4 +62,119 @@ div:focus {
 // main-container global css
 .app-container {
   padding: 16px;
+}
+
+
+body,
+th,
+td,
+form,
+input,
+button,
+select,
+option,
+textarea,
+p,
+ul,
+ol,
+li,
+dl,
+dt,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+legend,
+fieldset,
+pre,
+blockquote,
+hr {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+input,
+button,
+textarea,
+select {
+  outline: none;
+  font: 100%/1.5 'microsoft YaHei', '\5b8b\4f53', sans-serif;
+}
+
+body {
+  font: 12px/1.5 'microsoft YaHei', '\5b8b\4f53', sans-serif;
+  color: #333;
+  background: #fff;
+}
+
+img {
+  border: 0; /* ie下的默认黑边框 */
+  vertical-align: middle; /* 图片下的间隙，也可以用display: block */
+}
+
+a {
+  color: #666;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #c81623;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+em,
+i {
+  font-style: normal;
+}
+b,
+strong {
+  font-weight: 0;
+}
+del,
+s,
+ins,
+u {
+  text-decoration: none;
+}
+
+h1,h2,h3,h4,h5,h6{
+  font-weight: 400;
+  font-size: 100%;
+}
+
+
+.fl {
+  float: left;
+}
+
+.fr{
+  float: right;
+}
+
+.clearfix::before,
+.clearfix::after{
+  content: '';
+  display: table;
+}
+
+.clearfix::after{
+  clear: both;
+}
+
+.clearfix {
+	*zoom: 1; /* 兼容旧版本ie */
 }

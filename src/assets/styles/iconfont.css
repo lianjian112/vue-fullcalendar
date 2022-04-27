@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3312723 */
-  src: url('//at.alicdn.com/t/font_3312723_qob7xuqzgfa.woff2?t=1650610526180') format('woff2'),
-       url('//at.alicdn.com/t/font_3312723_qob7xuqzgfa.woff?t=1650610526180') format('woff'),
-       url('//at.alicdn.com/t/font_3312723_qob7xuqzgfa.ttf?t=1650610526180') format('truetype');
+  src: url('//at.alicdn.com/t/font_3312723_u5dje12ha8f.woff2?t=1650960640648') format('woff2'),
+       url('//at.alicdn.com/t/font_3312723_u5dje12ha8f.woff?t=1650960640648') format('woff'),
+       url('//at.alicdn.com/t/font_3312723_u5dje12ha8f.ttf?t=1650960640648') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-tianjia1:before {
+  content: "\e629";
+}
+
+.icon-tianjia:before {
+  content: "\e628";
+}
+
+.icon-nantou:before {
+  content: "\e62d";
 }
 
 .icon-shangchuan:before {
@@ -27,10 +39,6 @@
 
 .icon-chakan:before {
   content: "\e62c";
-}
-
-.icon-touxiangnan:before {
-  content: "\e629";
 }
 
 .icon-touxiangnv:before {
