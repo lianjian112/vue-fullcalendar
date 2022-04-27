@@ -174,8 +174,9 @@ export default {
     },
 
     next() {
-      console.log('this.$refs.fullCalendar', this.$refs.fullCalendar.prev)
-      // this.$refs.fullCalendar.prev()
+      // 这是调用fullCalendar的api
+      // console.log('this.$refs.fullCalendar', this.$refs.fullCalendar.prev)
+      this.$refs.fullCalendar.prev()
     },
     // 点击当前预约信息 删除
     handleEventClick(clickInfo) {
