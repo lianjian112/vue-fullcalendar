@@ -46,7 +46,7 @@ module.exports = {
     hot: true,
     public: host + ':' + port,
     port: port,
-    open: true,
+    open: false,
     overlay: {
       warnings: false,
       errors: true
