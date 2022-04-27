@@ -5,7 +5,7 @@
       <el-col :span="24">
         <div class="grid-content">
           <div class="user">
-            <img src="../../assets/patient/user.png" alt="" />
+            <img src="../../assets/patient/user.png" alt="">
             <span>Galen</span>
             <div class="grid-content appointment">
               <el-button type="primary">创建预约</el-button>
@@ -40,11 +40,11 @@
 export default {
   components: {},
   data() {
-    return {};
+    return {}
   },
   created() {},
-  methods: {},
-};
+  methods: {}
+}
 </script>
 <style lang="scss" scoped>
 .iconfont {

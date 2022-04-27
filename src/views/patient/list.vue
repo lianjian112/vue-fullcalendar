@@ -32,6 +32,7 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
 import { getList } from '@/api/table'
 import baseSearch from './components/search.vue'
 import Table from './components/table.vue'
