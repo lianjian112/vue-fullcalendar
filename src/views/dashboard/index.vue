@@ -26,10 +26,9 @@
 
 <script>
 import FullCalendar from '@fullcalendar/vue'
-import dayGridPlugin from '@fullcalendar/daygrid'
+// import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-// eslint-disable-next-line no-unused-vars
 import { INITIAL_EVENTS, createEventId } from './components/event-utils'
 import { parseTime } from '@/utils'
 // console.log('parseTime(new Date())', parseTime(new Date(), 'yy-mm-dd'))
@@ -42,14 +41,14 @@ export default {
       dialogVisible: true,
       calendarOptions: {
         plugins: [
-          dayGridPlugin,
+          // dayGridPlugin,
           timeGridPlugin,
           interactionPlugin // needed for dateClick
         ],
         headerToolbar: {
           left: 'prev,next today,myCustomButton',
           // center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          right: ''
         },
         customButtons: {
           myCustomButton: {
@@ -73,8 +72,8 @@ export default {
         firstDay: 0, // 一周开始的是那一天
         locale: 'zh-cn', //  配置中文
         // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
-        editable: true,
-        selectable: true,
+        editable: true, // 支持拖拽
+        selectable: true, // 支持修改
         selectOverlap: true, // 确定是否允许用户选择事件占用的时间段。
         selectMirror: true, // 是否在用户拖动时绘制“占位符”事件。
         weekends: true, // 是否显示周末
@@ -84,11 +83,11 @@ export default {
         slotDuration: '00:15', //  时间间隙
         allDaySlot: false, // 周，日视图时，all-day 不显示
         eventMouseover: this.dayClick,
-        select: this.handleDateSelect,
-        eventClick: this.handleEventClick,
+        select: this.handleDateSelect, // 点击选中事件
+        eventClick: this.handleEventClick, // 点击当前选中的事件
         eventsSet: this.handleEvents,
         eventMouseLeave: this.eventMouseLeave,
-        dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true },
+        dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true }, // 标题展示的样式
         slotLabelFormat: { // 周一到周日显示的格式
           hour: '2-digit',
           minute: '2-digit',
