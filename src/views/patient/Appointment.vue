@@ -26,7 +26,7 @@
 
 <script>
 import FullCalendar from '@fullcalendar/vue'
-// import dayGridPlugin from '@fullcalendar/daygrid'
+import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { INITIAL_EVENTS, createEventId } from './components/event-utils'
@@ -41,14 +41,14 @@ export default {
       dialogVisible: true,
       calendarOptions: {
         plugins: [
-          // dayGridPlugin,
+          dayGridPlugin,
           timeGridPlugin,
           interactionPlugin // needed for dateClick
         ],
         headerToolbar: {
           left: 'prev,next today,myCustomButton',
           // center: 'title',
-          right: ''
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
         customButtons: {
           myCustomButton: {
