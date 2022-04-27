@@ -1,7 +1,7 @@
 <template>
   <div class="appointment">
     <div class="appointment-header">
-      <span class="appointment-header-title">新建预约</span>
+      <span class="appointment-header-title">新建预</span>
       <span>4月7日 星期四 今天</span>
     </div>
     <div class="appointment-content">
@@ -71,10 +71,10 @@ export default {
         },
         firstDay: 0, // 一周开始的是那一天
         locale: 'zh-cn', //  配置中文
-        initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+        // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
         editable: true,
         selectable: true,
-        selectOverlap: false, // 确定是否允许用户选择事件占用的时间段。
+        selectOverlap: true, // 确定是否允许用户选择事件占用的时间段。
         selectMirror: true, // 是否在用户拖动时绘制“占位符”事件。
         weekends: true, // 是否显示周末
         unselectAuto: true,
@@ -102,7 +102,7 @@ export default {
           startTime: '08:00', // a start time (10am in this example)
           endTime: '18:00' // an end time (6pm in this example)
         },
-        events: [
+        initialEvents: [
           {
             id: 'disableRegionId',
             title: '这是过去选中的预约',
@@ -112,23 +112,24 @@ export default {
             backgroundColor: '#fff',
             textColor: '#B0B7C3',
             borderColor: '#B0B7C3',
-            start: '2022-04-25T10:00:00',
-            end: '2022-04-25T11:00:00'
+            classNames: 'diy-times-disable',
+            start: parseTime(new Date() - 1000 * 60 * 60 * 24 * 2, '{y}-{m}-{d}') + 'T10:00:00',
+            end: parseTime(new Date() - 1000 * 60 * 60 * 24 * 2, '{y}-{m}-{d}') + 'T11:00:00'
           },
           {
             id: 'nowRegionId',
+            classNames: 'diy-times',
             title: '这是可选的预约',
             constraint: 'testGroupId',
-            start: '2022-04-26T11:00:00',
-            end: '2022-04-26T12:00:00',
-            startEditable: true
+            start: parseTime(new Date() - 1000 * 60 * 60 * 24 * 0, '{y}-{m}-{d}') + 'T11:00:00',
+            end: parseTime(new Date() - 1000 * 60 * 60 * 24 * 0, '{y}-{m}-{d}') + 'T12:00:00'
           },
           {
             groupId: 'testGroupId',
+            id: 'timeFrame',
             start: parseTime(new Date(), '{y}-{m}-{d}'),
             end: '3022-04-28T18:00:00',
-            display: 'none',
-            startEditable: true
+            display: 'none'
           }
 
         ]
@@ -153,18 +154,23 @@ export default {
         calendarApi.unselect()// 取消选择
         return
       }
-
+      calendarApi.unselect()// 取消选择
       // 实现单选
-      calendarApi.getEvents().map((item) => item.remove())
+      calendarApi.getEvents().map((item) => {
+        console.log(item.id)
+        if (item.id !== 'disableRegionId' && item.id !== 'timeFrame') {
+          item.remove()
+        }
+      })
       calendarApi.addEvent({
         id: createEventId(),
-        constraint: 'testGroupId',
         title: '这是可选的预约',
+        classNames: 'diy-times',
+        constraint: 'testGroupId',
         start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
+        end: selectInfo.endStr
       })
-      calendarApi.unselect()// 取消选择
+      console.log('calendarApi.getEvents()', calendarApi.getEvents())
     },
 
     next() {
@@ -188,17 +194,6 @@ export default {
 
     handleEvents(events) {
       this.currentEvents = events
-      // console.log('events', events)
-      //       document.querySelector('').click(function() {
-      //     $('#calendar').fullCalendar('prev');
-      // });
-      // const element = document.querySelectorAll('.fc-timegrid-cols .fc-day-past ') || []
-      // element.forEach(item => {
-      //   item.addEventListener('click', function(e) {
-      //     console.log('itemitemitemitemitem')
-      //     // e.stopPropagation()// 取消事件冒泡
-      //   })
-      // })
     }
 
   }
